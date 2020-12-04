@@ -31,27 +31,104 @@ class ObligedEntitiesControllerSpec extends SpecBase {
 
   private val SUT = app.injector.instanceOf[ObligedEntitiesController]
 
-  "ObligedEntitiesController getObligedEntity" should {
+  private val URN_TYPE = "URN"
+  private val UTR_TYPE = "UTR"
+
+  "getObligedEntity By Utr" should {
     "return OK with valid processed payload for 2134514321" in {
-      testObligedEntities("2134514321")
+      testObligedEntitiesUtr("2134514321")
+    }
+
+    "return OK with valid processed payload for 1000000001" in {
+      testObligedEntitiesUtr("1000000001")
+    }
+
+    "return OK with valid processed payload for 1000000002" in {
+      testObligedEntitiesUtr("1000000002")
+    }
+
+    "return OK with valid processed payload for 1000000003" in {
+      testObligedEntitiesUtr("1000000003")
+    }
+
+    "return OK with valid processed payload for 1000000007" in {
+      testObligedEntitiesUtr("1000000007")
+    }
+
+    "return OK with valid processed payload for 1000000008" in {
+      testObligedEntitiesUtr("1000000008")
+    }
+
+    "return OK with valid processed payload for 1000000010" in {
+      testObligedEntitiesUtr("1000000010")
+    }
+
+    "return OK with valid processed payload for 1000000011" in {
+      testObligedEntitiesUtr("1000000011")
+    }
+
+    "return OK with valid processed payload for 1000000101" in {
+      testObligedEntitiesUtr("1000000101")
+    }
+
+    "return OK with valid processed payload for 1000000102" in {
+      testObligedEntitiesUtr("1000000102")
+    }
+
+    "return OK with valid processed payload for 1000000103" in {
+      testObligedEntitiesUtr("1000000103")
+    }
+
+    "return OK with valid processed payload for 5174384721" in {
+      testObligedEntitiesUtr("5174384721")
     }
 
     "obliged entities not available for provided utr" in {
-      val resultJson = getObligedEntitesAsJson("0000000404", NOT_FOUND)
+      val resultJson = getObligedEntitesAsJson("0000000404", UTR_TYPE, NOT_FOUND)
 
       (resultJson \ "code").as[String] mustBe "RESOURCE_NOT_FOUND"
     }
+  }
 
+  "getObligedEntity By Urn" should {
+    "return OK with valid processed payload for 0000000001AAAAA" in {
+      testObligedEntitiesUrn("0000000001AAAAA")
+    }
+
+    "return OK with valid processed payload for 0000000002AAAAA" in {
+      testObligedEntitiesUrn("0000000002AAAAA")
+    }
+
+    "return OK with valid processed payload for 0000000003AAAAA" in {
+      testObligedEntitiesUrn("0000000003AAAAA")
+    }
+
+    "return OK with valid processed payload for 0000000004AAAAA" in {
+      testObligedEntitiesUrn("0000000004AAAAA")
+    }
+
+    "return OK with valid processed payload for 1234567890AAAAA" in {
+      testObligedEntitiesUrn("1234567890AAAAA")
+    }
+
+    "obliged entities not available for provided urn" in {
+      val resultJson = getObligedEntitesAsJson("0000000404AAAAA", URN_TYPE, NOT_FOUND)
+
+      (resultJson \ "code").as[String] mustBe "RESOURCE_NOT_FOUND"
+    }
+  }
+
+ "getObligedEntity Failure" should {
 
     "return Internal Server Error when des having internal errors" in {
-      val resultJson = getObligedEntitesAsJson("0000000500", INTERNAL_SERVER_ERROR)
+      val resultJson = getObligedEntitesAsJson("0000000500", UTR_TYPE, INTERNAL_SERVER_ERROR)
 
       (resultJson \ "code").as[String] mustBe "SERVER_ERROR"
       (resultJson \ "reason").as[String] mustBe "IF is currently experiencing problems that require live service intervention"
     }
 
     "return 503 service unavailable when dependent service is unavailable" in {
-      val resultJson = getObligedEntitesAsJson("0000000503", SERVICE_UNAVAILABLE)
+      val resultJson = getObligedEntitesAsJson("0000000503", UTR_TYPE, SERVICE_UNAVAILABLE)
 
       (resultJson \ "code").as[String] mustBe "SERVICE_UNAVAILABLE"
       (resultJson \ "reason").as[String] mustBe "Dependent systems are currently not responding"
@@ -59,16 +136,16 @@ class ObligedEntitiesControllerSpec extends SpecBase {
 
   }
 
-  private def getObligedEntitesAsJson(utr: String, expectedResult: Int): JsValue = {
-    val request = createGetRequestWithValidHeaders(s"/trusts/obliged-entities/UTR/$utr")
-    val result = SUT.getObligedEntity(utr).apply(request)
+  private def getObligedEntitesAsJson(id: String, idType: String, expectedResult: Int): JsValue = {
+    val request = createGetRequestWithValidHeaders(s"/trusts/obliged-entities/$idType/$id")
+    val result = SUT.getObligedEntity(id).apply(request)
     status(result) must be(expectedResult)
     contentType(result).get mustBe "application/json"
     contentAsJson(result)
   }
 
-  private def getObligedEntitesAsValidatedJson(utr: String): JsValue = {
-    val resultJson = getObligedEntitesAsJson(utr, OK)
+  private def getObligedEntitesAsValidatedJson(id: String, idType: String): JsValue = {
+    val resultJson = getObligedEntitesAsJson(id, idType, OK)
 
     val validationResult = obligedEntitiesValidator.validateAgainstSchema(resultJson.toString)
     validationResult mustBe SuccessfulValidation
@@ -76,9 +153,15 @@ class ObligedEntitiesControllerSpec extends SpecBase {
     resultJson
   }
 
-  private def testObligedEntities(utr: String) = {
-    val resultJson = getObligedEntitesAsValidatedJson(utr)
+  private def testObligedEntitiesUtr(utr: String) = {
+    val resultJson = getObligedEntitesAsValidatedJson(utr, UTR_TYPE)
 
     (resultJson \ "identifiers" \ "utr").as[String] mustBe utr
+  }
+
+  private def testObligedEntitiesUrn(urn: String) = {
+    val resultJson = getObligedEntitesAsValidatedJson(urn, URN_TYPE)
+
+    (resultJson \ "identifiers" \ "urn").as[String] mustBe urn
   }
 }
