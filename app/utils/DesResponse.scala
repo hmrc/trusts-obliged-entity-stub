@@ -32,21 +32,21 @@ object DesResponse {
     s"""
        |{
        | "code": "BUSINESS_VALIDATION",
-       | "reason": "The remote end point has indicated the request could not be processed"
+       | "reason": "The remote end point has indicated the request could not be processed."
        |}""".stripMargin)
 
   val jsonResponse503: JsValue = Json.parse(
     s"""
        |{
        | "code": "SERVICE_UNAVAILABLE",
-       | "reason": "Dependent systems are currently not responding"
+       | "reason": "Dependent systems are currently not responding."
        |}""".stripMargin)
 
   val jsonResponse500: JsValue = Json.parse(
     s"""
        |{
        | "code": "SERVER_ERROR",
-       | "reason": "IF is currently experiencing problems that require live service intervention"
+       | "reason": "IF is currently experiencing problems that require live service intervention."
        |}""".stripMargin)
 
 
@@ -54,21 +54,21 @@ object DesResponse {
     s"""
        |{
        | "code": "INVALID_IDTYPE",
-       | "reason": "Submission has not passed validation. Invalid parameter idType"
+       | "reason": "Submission has not passed validation. Invalid parameter idType."
        |}""".stripMargin)
 
   val jsonResponseInvalidIdValue: JsValue = Json.parse(
     s"""
        |{
        | "code": "INVALID_ID",
-       | "reason": "Submission has not passed validation. Invalid parameter idValue"
+       | "reason": "Submission has not passed validation. Invalid parameter idValue."
        |}""".stripMargin)
 
   val jsonResponseInvalidCorrelationId: JsValue = Json.parse(
     s"""
        |{
        | "code": "INVALID_CORRELATIONID",
-       | "reason": "Submission has not passed validation. Invalid header CorrelationId"
+       | "reason": "Submission has not passed validation. Invalid header CorrelationId."
        |}""".stripMargin)
 
 

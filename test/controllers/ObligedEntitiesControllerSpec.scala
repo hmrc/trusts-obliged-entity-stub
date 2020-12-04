@@ -93,6 +93,7 @@ class ObligedEntitiesControllerSpec extends SpecBase {
       val resultJson = getObligedEntitesAsJson("0000000400AAAAA", UTR_TYPE, BAD_REQUEST)
 
       (resultJson \ "code").as[String] mustBe "INVALID_ID"
+      (resultJson \ "reason").as[String] mustBe "Submission has not passed validation. Invalid parameter idValue."
     }
   }
 
@@ -131,6 +132,7 @@ class ObligedEntitiesControllerSpec extends SpecBase {
       val resultJson = getObligedEntitesAsJson("1000000001", URN_TYPE, BAD_REQUEST)
 
       (resultJson \ "code").as[String] mustBe "INVALID_ID"
+      (resultJson \ "reason").as[String] mustBe "Submission has not passed validation. Invalid parameter idValue."
     }
 
   }
@@ -140,13 +142,14 @@ class ObligedEntitiesControllerSpec extends SpecBase {
      val resultJson = getObligedEntitesAsJson("0000000400AAAAA", "XXXX", BAD_REQUEST)
 
      (resultJson \ "code").as[String] mustBe "INVALID_IDTYPE"
+     (resultJson \ "reason").as[String] mustBe "Submission has not passed validation. Invalid parameter idType."
     }
 
    "return Unprocessable Entity Error when des having internal errors" in {
      val resultJson = getObligedEntitesAsJson("0000000422", UTR_TYPE, UNPROCESSABLE_ENTITY)
 
      (resultJson \ "code").as[String] mustBe "BUSINESS_VALIDATION"
-     (resultJson \ "reason").as[String] mustBe "The remote end point has indicated the request could not be processed"
+     (resultJson \ "reason").as[String] mustBe "The remote end point has indicated the request could not be processed."
    }
 
 
@@ -154,14 +157,14 @@ class ObligedEntitiesControllerSpec extends SpecBase {
       val resultJson = getObligedEntitesAsJson("0000000500", UTR_TYPE, INTERNAL_SERVER_ERROR)
 
       (resultJson \ "code").as[String] mustBe "SERVER_ERROR"
-      (resultJson \ "reason").as[String] mustBe "IF is currently experiencing problems that require live service intervention"
+      (resultJson \ "reason").as[String] mustBe "IF is currently experiencing problems that require live service intervention."
     }
 
     "return 503 service unavailable when dependent service is unavailable" in {
       val resultJson = getObligedEntitesAsJson("0000000503", UTR_TYPE, SERVICE_UNAVAILABLE)
 
       (resultJson \ "code").as[String] mustBe "SERVICE_UNAVAILABLE"
-      (resultJson \ "reason").as[String] mustBe "Dependent systems are currently not responding"
+      (resultJson \ "reason").as[String] mustBe "Dependent systems are currently not responding."
     }
 
   }
