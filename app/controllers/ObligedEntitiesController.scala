@@ -52,6 +52,8 @@ class ObligedEntitiesController @Inject()(headerValidator: HeaderValidatorAction
       // 5mld taxable trusts
       case "1000000001" | "1000000002" | "1000000003" | "1000000007" | "1000000008" | "1000000101" | "1000000102" | "5174384721" | "1000000011" =>
         jsonResult(id)
+      case "1000000005" | "1000000006" | "1000000009" | "1000000011" | "1000000012" | "1000000013" | "5000000000" =>
+        jsonResult(id)
       // 4MLD taxable trust registered, first time played back under 5MLD. User needs to answer additional questions
       case "1000000010" =>
         jsonResult(id)
@@ -61,7 +63,7 @@ class ObligedEntitiesController @Inject()(headerValidator: HeaderValidatorAction
       // 5mld non-taxable trusts with UTR
       case "1000000103" =>
         jsonResult(id)
-      case "2134514321" | "1234567890" | "1234567891" | "1234567892" | "1234567893" | "1234567894" | "1234567895" | "1234567896" | "1234567897" | "1234567898" | "1234567899" | "1000000005" | "2134514321" | "5174384721" | "1274834715" =>
+      case "1234567890" | "1234567891" | "1234567892" | "1234567893" | "1234567894" | "1234567895" | "1234567896" | "1234567897" | "1234567898" | "1234567899" | "1000000005" | "2134514321" | "5174384721" | "1274834715" =>
         jsonResult(id)
 
 

@@ -40,10 +40,14 @@ class ObligedEntitiesControllerSpec extends SpecBase {
     "return OK with valid processed payload for 1000000002" in testObligedEntitiesUtr("1000000002")
     "return OK with valid processed payload for 1000000003" in testObligedEntitiesUtr("1000000003")
     "return OK with valid processed payload for 1000000005" in testObligedEntitiesUtr("1000000005")
+    "return OK with valid processed payload for 1000000006" in testObligedEntitiesUtr("1000000006")
     "return OK with valid processed payload for 1000000007" in testObligedEntitiesUtr("1000000007")
     "return OK with valid processed payload for 1000000008" in testObligedEntitiesUtr("1000000008")
+    "return OK with valid processed payload for 1000000009" in testObligedEntitiesUtr("1000000009")
     "return OK with valid processed payload for 1000000010" in testObligedEntitiesUtr("1000000010")
     "return OK with valid processed payload for 1000000011" in testObligedEntitiesUtr("1000000011")
+    "return OK with valid processed payload for 1000000012" in testObligedEntitiesUtr("1000000012")
+    "return OK with valid processed payload for 1000000013" in testObligedEntitiesUtr("1000000013")
     "return OK with valid processed payload for 1000000101" in testObligedEntitiesUtr("1000000101")
     "return OK with valid processed payload for 1000000102" in testObligedEntitiesUtr("1000000102")
     "return OK with valid processed payload for 1000000103" in testObligedEntitiesUtr("1000000103")
@@ -59,6 +63,7 @@ class ObligedEntitiesControllerSpec extends SpecBase {
     "return OK with valid processed payload for 1234567899" in testObligedEntitiesUtr("1234567899")
     "return OK with valid processed payload for 1274834715" in testObligedEntitiesUtr("1274834715")
     "return OK with valid processed payload for 5174384721" in testObligedEntitiesUtr("5174384721")
+    "return OK with valid processed payload for 5000000000" in testObligedEntitiesUtr("5000000000")
 
     "obliged entities not available for provided utr" in {
       val resultJson = getObligedEntitesAsJson("0000000404", UTR_TYPE, NOT_FOUND)
