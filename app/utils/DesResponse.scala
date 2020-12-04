@@ -39,7 +39,7 @@ object DesResponse {
     s"""
        |{
        | "code": "SERVER_ERROR",
-       | "reason": "DES is currently experiencing problems that require live service intervention"
+       | "reason": "IF is currently experiencing problems that require live service intervention"
        |}""".stripMargin)
 
 

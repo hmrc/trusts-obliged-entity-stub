@@ -47,7 +47,7 @@ class ObligedEntitiesControllerSpec extends SpecBase {
       val resultJson = getObligedEntitesAsJson("0000000500", INTERNAL_SERVER_ERROR)
 
       (resultJson \ "code").as[String] mustBe "SERVER_ERROR"
-      (resultJson \ "reason").as[String] mustBe "DES is currently experiencing problems that require live service intervention"
+      (resultJson \ "reason").as[String] mustBe "IF is currently experiencing problems that require live service intervention"
     }
 
     "return 503 service unavailable when dependent service is unavailable" in {
