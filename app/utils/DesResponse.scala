@@ -28,6 +28,13 @@ object DesResponse {
        | "reason": "Submission has not passed validation. Invalid Payload."
        |}""".stripMargin)
 
+  val jsonResponse422: JsValue = Json.parse(
+    s"""
+       |{
+       | "code": "BUSINESS_VALIDATION",
+       | "reason": "The remote end point has indicated the request could not be processed"
+       |}""".stripMargin)
+
   val jsonResponse503: JsValue = Json.parse(
     s"""
        |{
@@ -43,18 +50,25 @@ object DesResponse {
        |}""".stripMargin)
 
 
-  val jsonResponseInvalidUtr: JsValue = Json.parse(
+  val jsonResponseInvalidIdType: JsValue = Json.parse(
     s"""
        |{
-       | "code": "INVALID_UTR",
-       | "reason": "Submission has not passed validation. Invalid parameter UTR."
+       | "code": "INVALID_IDTYPE",
+       | "reason": "Submission has not passed validation. Invalid parameter idType"
        |}""".stripMargin)
 
-  val jsonResponseInvalidRegime: JsValue = Json.parse(
+  val jsonResponseInvalidIdValue: JsValue = Json.parse(
     s"""
        |{
-       | "code": "INVALID_REGIME",
-       | "reason": "The remote endpoint has indicated that the REGIME provided is invalid."
+       | "code": "INVALID_ID",
+       | "reason": "Submission has not passed validation. Invalid parameter idValue"
+       |}""".stripMargin)
+
+  val jsonResponseInvalidCorrelationId: JsValue = Json.parse(
+    s"""
+       |{
+       | "code": "INVALID_CORRELATIONID",
+       | "reason": "Submission has not passed validation. Invalid header CorrelationId"
        |}""".stripMargin)
 
 

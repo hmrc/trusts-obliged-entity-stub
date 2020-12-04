@@ -1,4 +1,3 @@
 # microservice specific routes
 
-GET        /trusts/obliged-entities/UTR/:utr            controllers.ObligedEntitiesController.getObligedEntity(utr: String)
-GET        /trusts/obliged-entities/URN/:urn            controllers.ObligedEntitiesController.getObligedEntity(urn: String)
+GET        /trusts/obliged-entities/:idType/:id            controllers.ObligedEntitiesController.getObligedEntity(id: String, idType: String)
