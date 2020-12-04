@@ -26,20 +26,40 @@ class ObligedEntitiesControllerSpec extends SpecBase {
   private implicit val cc: ControllerComponents = app.injector.instanceOf[ControllerComponents]
   private val headerValidatorAction: HeaderValidatorAction = app.injector.instanceOf[HeaderValidatorAction]
 
-  private val displayTrustsSchema = "/resources/schemas/display-estates-3.0.json"
-  private val displayValidator = new ValidationService().get(displayTrustsSchema)
+  private val obligedEntitiesSchema = "/resources/schemas/Response_Schema-v1.0.0.json"
+  private val obligedEntitiesValidator = new ValidationService().get(obligedEntitiesSchema)
 
   private val SUT = app.injector.instanceOf[ObligedEntitiesController]
 
   "ObligedEntitiesController getObligedEntity" should {
+    "return OK with valid processed payload for 2134514321" in {
+      testObligedEntities("2134514321")
+    }
 
-    "return OK with valid processed payload for 2000000000" in {
-      testProcessedEstate("2000000000")
+    "obliged entities not available for provided utr" in {
+      val resultJson = getObligedEntitesAsJson("0000000404", NOT_FOUND)
+
+      (resultJson \ "code").as[String] mustBe "RESOURCE_NOT_FOUND"
+    }
+
+
+    "return Internal Server Error when des having internal errors" in {
+      val resultJson = getObligedEntitesAsJson("0000000500", INTERNAL_SERVER_ERROR)
+
+      (resultJson \ "code").as[String] mustBe "SERVER_ERROR"
+      (resultJson \ "reason").as[String] mustBe "DES is currently experiencing problems that require live service intervention"
+    }
+
+    "return 503 service unavailable when dependent service is unavailable" in {
+      val resultJson = getObligedEntitesAsJson("0000000503", SERVICE_UNAVAILABLE)
+
+      (resultJson \ "code").as[String] mustBe "SERVICE_UNAVAILABLE"
+      (resultJson \ "reason").as[String] mustBe "Dependent systems are currently not responding"
     }
 
   }
 
-  private def getEstateAsJson(utr: String, expectedResult: Int): JsValue = {
+  private def getObligedEntitesAsJson(utr: String, expectedResult: Int): JsValue = {
     val request = createGetRequestWithValidHeaders(s"/trusts/obliged-entities/UTR/$utr")
     val result = SUT.getObligedEntity(utr).apply(request)
     status(result) must be(expectedResult)
@@ -47,27 +67,18 @@ class ObligedEntitiesControllerSpec extends SpecBase {
     contentAsJson(result)
   }
 
-  private def getEstateAsValidatedJson(utr: String): JsValue = {
-    val resultJson = getEstateAsJson(utr, OK)
+  private def getObligedEntitesAsValidatedJson(utr: String): JsValue = {
+    val resultJson = getObligedEntitesAsJson(utr, OK)
 
-    val validationResult = displayValidator.validateAgainstSchema(resultJson.toString)
+    val validationResult = obligedEntitiesValidator.validateAgainstSchema(resultJson.toString)
     validationResult mustBe SuccessfulValidation
 
     resultJson
   }
 
-  private def testProcessedEstate(utr: String) = {
-    val resultJson = getEstateAsValidatedJson(utr)
+  private def testObligedEntities(utr: String) = {
+    val resultJson = getObligedEntitesAsValidatedJson(utr)
 
-    (resultJson \ "responseHeader" \ "dfmcaReturnUserStatus").as[String] mustBe "Processed"
-    (resultJson \ "trustOrEstateDisplay" \ "applicationType").as[String] mustBe "02"
-    (resultJson \ "trustOrEstateDisplay" \ "matchData" \ "utr").as[String] mustBe utr
-  }
-
-  private def testReturnsOtherStatus(utr: String, status: String) = {
-    val resultJson = getEstateAsJson(utr, OK)
-
-    (resultJson \ "responseHeader" \ "dfmcaReturnUserStatus").as[String] mustBe status
-    (resultJson \ "trustOrEstateDisplay").toOption mustNot be(defined)
+    (resultJson \ "identifiers" \ "utr").as[String] mustBe utr
   }
 }
