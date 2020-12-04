@@ -35,53 +35,30 @@ class ObligedEntitiesControllerSpec extends SpecBase {
   private val UTR_TYPE = "UTR"
 
   "getObligedEntity By Utr" should {
-    "return OK with valid processed payload for 2134514321" in {
-      testObligedEntitiesUtr("2134514321")
-    }
-
-    "return OK with valid processed payload for 1000000001" in {
-      testObligedEntitiesUtr("1000000001")
-    }
-
-    "return OK with valid processed payload for 1000000002" in {
-      testObligedEntitiesUtr("1000000002")
-    }
-
-    "return OK with valid processed payload for 1000000003" in {
-      testObligedEntitiesUtr("1000000003")
-    }
-
-    "return OK with valid processed payload for 1000000007" in {
-      testObligedEntitiesUtr("1000000007")
-    }
-
-    "return OK with valid processed payload for 1000000008" in {
-      testObligedEntitiesUtr("1000000008")
-    }
-
-    "return OK with valid processed payload for 1000000010" in {
-      testObligedEntitiesUtr("1000000010")
-    }
-
-    "return OK with valid processed payload for 1000000011" in {
-      testObligedEntitiesUtr("1000000011")
-    }
-
-    "return OK with valid processed payload for 1000000101" in {
-      testObligedEntitiesUtr("1000000101")
-    }
-
-    "return OK with valid processed payload for 1000000102" in {
-      testObligedEntitiesUtr("1000000102")
-    }
-
-    "return OK with valid processed payload for 1000000103" in {
-      testObligedEntitiesUtr("1000000103")
-    }
-
-    "return OK with valid processed payload for 5174384721" in {
-      testObligedEntitiesUtr("5174384721")
-    }
+    "return OK with valid processed payload for 2134514321" in testObligedEntitiesUtr("2134514321")
+    "return OK with valid processed payload for 1000000001" in testObligedEntitiesUtr("1000000001")
+    "return OK with valid processed payload for 1000000002" in testObligedEntitiesUtr("1000000002")
+    "return OK with valid processed payload for 1000000003" in testObligedEntitiesUtr("1000000003")
+    "return OK with valid processed payload for 1000000005" in testObligedEntitiesUtr("1000000005")
+    "return OK with valid processed payload for 1000000007" in testObligedEntitiesUtr("1000000007")
+    "return OK with valid processed payload for 1000000008" in testObligedEntitiesUtr("1000000008")
+    "return OK with valid processed payload for 1000000010" in testObligedEntitiesUtr("1000000010")
+    "return OK with valid processed payload for 1000000011" in testObligedEntitiesUtr("1000000011")
+    "return OK with valid processed payload for 1000000101" in testObligedEntitiesUtr("1000000101")
+    "return OK with valid processed payload for 1000000102" in testObligedEntitiesUtr("1000000102")
+    "return OK with valid processed payload for 1000000103" in testObligedEntitiesUtr("1000000103")
+    "return OK with valid processed payload for 1234567890" in testObligedEntitiesUtr("1234567890")
+    "return OK with valid processed payload for 1234567891" in testObligedEntitiesUtr("1234567891")
+    "return OK with valid processed payload for 1234567892" in testObligedEntitiesUtr("1234567892")
+    "return OK with valid processed payload for 1234567893" in testObligedEntitiesUtr("1234567893")
+    "return OK with valid processed payload for 1234567894" in testObligedEntitiesUtr("1234567894")
+    "return OK with valid processed payload for 1234567895" in testObligedEntitiesUtr("1234567895")
+    "return OK with valid processed payload for 1234567896" in testObligedEntitiesUtr("1234567896")
+    "return OK with valid processed payload for 1234567897" in testObligedEntitiesUtr("1234567897")
+    "return OK with valid processed payload for 1234567898" in testObligedEntitiesUtr("1234567898")
+    "return OK with valid processed payload for 1234567899" in testObligedEntitiesUtr("1234567899")
+    "return OK with valid processed payload for 1274834715" in testObligedEntitiesUtr("1274834715")
+    "return OK with valid processed payload for 5174384721" in testObligedEntitiesUtr("5174384721")
 
     "obliged entities not available for provided utr" in {
       val resultJson = getObligedEntitesAsJson("0000000404", UTR_TYPE, NOT_FOUND)

@@ -61,6 +61,10 @@ class ObligedEntitiesController @Inject()(headerValidator: HeaderValidatorAction
       // 5mld non-taxable trusts with UTR
       case "1000000103" =>
         jsonResult(id)
+      case "2134514321" | "1234567890" | "1234567891" | "1234567892" | "1234567893" | "1234567894" | "1234567895" | "1234567896" | "1234567897" | "1234567898" | "1234567899" | "1000000005" | "2134514321" | "5174384721" | "1274834715" =>
+        jsonResult(id)
+
+
       case "0000000422" =>
         Future.successful(UnprocessableEntity(jsonResponse422))
       case "0000000500" =>
