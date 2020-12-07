@@ -1,0 +1,692 @@
+﻿openapi: 3.0.3
+info:
+  title: 'API#1584 Get Trust Obliged Entities Data'
+  description: This API provides the capability for retrieving Trust details for an obliged entity.
+  version: 1.0.0
+  contact:
+    name: Denin Thomas
+    email: denin.thomas@hmrc.gov.uk
+servers:
+  - url: 'https://hostname'
+    description: Actual environment values can be obtained from IF platforms team for each environment
+tags:
+  - name: 'API#1584'
+    description: This API provides the capability for retrieving Trust details for an obliged entity.
+paths:
+  '/trusts/obliged-entities/{idType}/{idValue}':
+    get:
+      summary: 'API#1584 Get Trust Obliged Entities Data'
+      description: |
+        ```UTR Example /trusts/obliged-entities/UTR/1234567890```<br>
+        ```URN Example /trusts/obliged-entities/URN/XATRUST80000001```
+        ```
+
+        Change Log
+
+        Version Date        Author         Description
+        0.1.0   11-08-2020  Denin Thomas  Initial Draft
+        0.2.0   12-08-2020  Denin Thomas  Updated with internal review commments
+        0.3.0   20-08-2020  Denin Thomas  Updated the following response structure
+                                          -Updated 'leadTrustees' (under $.entities) object to remove array structure and replaced 'contactEmailAddress' with 'nationality'
+                                          -Updated 'trustees' (under $.entities) object to have a max of 25  trustees – Individual and Company combined
+                                          -Moved 'deceased' object from beneficiary to $.entities
+                                          -Updated date format for 'submissionDate' and 'trustStartDate' to DD-MM-YYYY
+                                          -Updated 'dateOfBirth' format for all entities to MM-YYYY
+        0.4.0   28-08-2020  Denin Thomas  -Updated 'addressType' to have UK and non-UK address types
+        0.5.0   22-09-2020  Denin Thomas  -Updated 'leadTrustees' object to 'leadTrustee' and made dateOfBirth mandatory for lead trustee
+        0.6.0   29-09-2020  Denin Thomas  -Moved 'deceased' object into 'settlors' object
+        0.7.0   02-10-2020  Denin Thomas  -Updated 'dateString' type to DD/MM/YYYY format
+                                          -Updated 'monthYearString' type to MM/YYYY format
+                                          -Removed lowercase a-z characters from all regex patterns ,except for boolean and identifiers
+                                          -Updated all country types to support expanded country names
+        0.8.0   08-10-2020  Denin Thomas  Updated the following response fields to accept a mix of upper and lower case characters
+                                          -$.trustName
+                                          -$.correspondence.address (all elements except 'postCode')
+        1.0.0   14-10-2020  Denin Thomas  Baselined with following changes
+                                          -Updated $.correspondence.address.country regex to accept only uppercase
+                                          -Documentation changes - trustName and address line 1 - 4 to be Capitalized Case
+      operationId: getTrustObligedEntitiesData
+      tags:
+        - 'API#1584'
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/environment'
+        - $ref: '#/components/parameters/correlationId'
+        - $ref: '#/components/parameters/idTypeParam'
+        - $ref: '#/components/parameters/idValueParam'
+      responses:
+        '200':
+          description: Successful Response
+          headers:
+            CorrelationId:
+              $ref: '#/components/headers/CorrelationId'
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/successResponse'
+              examples:
+                Sample_Response:
+                  $ref: '#/components/examples/Sample_Response'
+        '400':
+          description: |-
+            Bad request
+            ```
+            A bad request has been made; this could be due to one or more issues with the request
+            "code"                 "reason"
+            INVALID_IDTYPE          Submission has not passed validation. Invalid parameter idType.
+            INVALID_IDVALUE         Submission has not passed validation. Invalid parameter idValue.
+            INVALID_CORRELATIONID   Submission has not passed validation. Invalid header CorrelationId.
+          headers:
+            CorrelationId:
+              $ref: '#/components/headers/CorrelationId'
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/failureResponse'
+              examples:
+                Error_InvalidIDType:
+                  $ref: '#/components/examples/Error_InvalidIDType'
+                Error_InvalidIDValue:
+                  $ref: '#/components/examples/Error_InvalidIDValue'
+                Error_InvalidCorrelationId:
+                  $ref: '#/components/examples/Error_InvalidCorrelationId'
+        '404':
+          description: |-
+            Not Found
+             ```
+             Error at backend ; this could be due to one or more issues with the request
+             "code"                 "reason"
+             NO_DATA_FOUND      The remote endpoint has indicated that no data can be found for the given identifier.
+          headers:
+            CorrelationId:
+              $ref: '#/components/headers/CorrelationId'
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/failureResponse'
+              examples:
+                Error_Not_Found:
+                  $ref: '#/components/examples/Error_NotFound'
+        '422':
+          description: |-
+            Unprocessable Entity
+            ```
+            A bad request has been made; this could be due to one or more issues with the request
+            "code"                 "reason"
+            BUSINESS_VALIDATION     The remote end point has indicated the request could not be processed.
+          headers:
+            CorrelationId:
+              $ref: '#/components/headers/CorrelationId'
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/failureResponse'
+              examples:
+                Error_BusinessValidation:
+                  $ref: '#/components/examples/Error_BusinessValidation'
+        '500':
+          description: |-
+            Server Error
+            ```
+            "code"         "reason"
+            SERVER_ERROR   IF is currently experiencing problems that require live service intervention.
+          headers:
+            CorrelationId:
+              $ref: '#/components/headers/CorrelationId'
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/failureResponse'
+              examples:
+                ServerError:
+                  $ref: '#/components/examples/ServerError'
+        '503':
+          description: |-
+            Service unavailable
+            ```
+            "code"         "reason"
+            SERVICE_UNAVAILABLE   Dependent systems are currently not responding.
+          headers:
+            CorrelationId:
+              $ref: '#/components/headers/CorrelationId'
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/failureResponse'
+              examples:
+                ServiceUnavailable:
+                  $ref: '#/components/examples/ServiceUnavailable'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+  headers:
+    CorrelationId:
+      description: A UUID format string for the transaction used for traceability purposes
+      schema:
+        type: string
+        pattern: '^[0-9a-fA-F]{8}[-][0-9a-fA-F]{4}[-][0-9a-fA-F]{4}[-][0-9a-fA-F]{4}[-][0-9a-fA-F]{12}$'
+
+  parameters:
+    idTypeParam:
+      in: path
+      name: idType
+      description: 'Required - Possible values for idType: UTR or URN'
+      required: true
+      schema:
+        type: string
+        pattern: '^[A-Z0-9]{3,6}$'
+    idValueParam:
+      in: path
+      name: idValue
+      description: 'Required - Value of UTR or URN '
+      required: true
+      schema:
+        type: string
+        pattern: '^([A-Z0-9]{1,15})$'
+    environment:
+      in: header
+      name: Environment
+      description: Mandatory. The environment in use.
+      required: true
+      schema:
+        type: string
+        enum:
+          - ist0
+          - clone
+          - live
+    correlationId:
+      in: header
+      name: CorrelationId
+      description: A UUID format string for the transaction.
+      required: true
+      schema:
+        type: string
+        pattern: '^[0-9a-fA-F]{8}[-][0-9a-fA-F]{4}[-][0-9a-fA-F]{4}[-][0-9a-fA-F]{4}[-][0-9a-fA-F]{12}$'
+  schemas:
+    failureResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - failures
+      properties:
+        failures:
+          type: array
+          minItems: 1
+          uniqueItems: true
+          items:
+            type: object
+            additionalProperties: false
+            required:
+              - code
+              - reason
+            properties:
+              code:
+                description: Keys for all the errors returned
+                type: string
+                pattern: '^[A-Z0-9_-]{1,160}$'
+              reason:
+                description: A simple description for the failure
+                type: string
+                minLength: 1
+                maxLength: 160
+    successResponse:
+      type: object
+      properties:
+        submissionDate:
+          $ref: '#/components/schemas/dateString'
+        trustName:
+          $ref: '#/components/schemas/orgName56String'
+        identifiers:
+          description: 'Possible options - UTR to be returned for Taxable , URN for Non- Taxable , UTR and URN if Trust has converted from Non-taxable to Taxable'
+          type: object
+          oneOf:
+            - description: UTR only
+              properties:
+                utr:
+                  $ref: '#/components/schemas/utrType'
+              required:
+                - utr
+              additionalProperties: false
+            - description: URN only
+              properties:
+                urn:
+                  $ref: '#/components/schemas/urnType'
+              required:
+                - urn
+              additionalProperties: false
+            - description: UTR and URN
+              properties:
+                utr:
+                  $ref: '#/components/schemas/utrType'
+                urn:
+                  $ref: '#/components/schemas/urnType'
+              required:
+                - utr
+                - urn
+              additionalProperties: false
+        trustStartDate:
+          $ref: '#/components/schemas/dateString'
+        correspondence:
+          type: object
+          properties:
+            address:
+              $ref: '#/components/schemas/addressType'
+            welsh:
+              description: Welsh Language Preference
+              type: boolean
+            braille:
+              description: Braille Preference
+              type: boolean
+          required:
+            - address
+          additionalProperties: false
+        entities:
+          type: object
+          properties:
+            leadTrustee:
+              type: object
+              oneOf:
+                - description: Lead Trustee Individual
+                  properties:
+                    leadTrusteeIndividual:
+                      type: object
+                      properties:
+                        firstName:
+                          $ref: '#/components/schemas/nameString'
+                        middleName:
+                          $ref: '#/components/schemas/nameString'
+                        lastName:
+                          $ref: '#/components/schemas/nameString'
+                        dateOfBirth:
+                          $ref: '#/components/schemas/monthYearString'
+                        nationality:
+                          $ref: '#/components/schemas/countryType'
+                        countryOfResidence:
+                          $ref: '#/components/schemas/countryType'
+                      required:
+                        - firstName
+                        - lastName
+                        - dateOfBirth
+                      additionalProperties: false
+                  required:
+                    - leadTrusteeIndividual
+                  additionalProperties: false
+                - description: Lead Trustee Company
+                  properties:
+                    leadTrusteeCompany:
+                      $ref: '#/components/schemas/companyType'
+                  required:
+                    - leadTrusteeCompany
+                  additionalProperties: false
+            trustees:
+              type: array
+              minItems: 1
+              maxItems: 25
+              items:
+                $ref: '#/components/schemas/trusteeType'
+            naturalPerson:
+              type: array
+              minItems: 1
+              maxItems: 25
+              items:
+                $ref: '#/components/schemas/individualType'
+            settlors:
+              description: Atleast one Settlor will be present
+              type: object
+              minProperties: 1
+              properties:
+                settlorIndividual:
+                  type: array
+                  minItems: 1
+                  maxItems: 25
+                  items:
+                    $ref: '#/components/schemas/individualType'
+                settlorCompany:
+                  type: array
+                  minItems: 1
+                  maxItems: 25
+                  items:
+                    $ref: '#/components/schemas/companyType'
+                deceased:
+                  $ref: '#/components/schemas/individualType'
+              additionalProperties: false
+            protectors:
+              type: object
+              properties:
+                protectorIndividual:
+                  type: array
+                  minItems: 1
+                  maxItems: 25
+                  items:
+                    $ref: '#/components/schemas/individualType'
+                protectorCompany:
+                  type: array
+                  minItems: 1
+                  maxItems: 25
+                  items:
+                    $ref: '#/components/schemas/companyType'
+              additionalProperties: false
+            beneficiary:
+              type: object
+              minProperties: 1
+              properties:
+                individual:
+                  type: array
+                  minItems: 1
+                  maxItems: 25
+                  items:
+                    $ref: '#/components/schemas/individualType'
+                company:
+                  type: array
+                  minItems: 1
+                  maxItems: 25
+                  items:
+                    $ref: '#/components/schemas/companyType'
+                trust:
+                  type: array
+                  minItems: 1
+                  maxItems: 25
+                  items:
+                    $ref: '#/components/schemas/companyType'
+                charity:
+                  type: array
+                  minItems: 1
+                  maxItems: 25
+                  items:
+                    $ref: '#/components/schemas/companyType'
+                unidentified:
+                  type: array
+                  minItems: 1
+                  maxItems: 25
+                  items:
+                    type: object
+                    properties:
+                      beneficiaryDescription:
+                        $ref: '#/components/schemas/descriptionType'
+                    additionalProperties: false
+                large:
+                  type: array
+                  minItems: 1
+                  maxItems: 25
+                  items:
+                    type: object
+                    properties:
+                      beneficiaryDescription:
+                        $ref: '#/components/schemas/descriptionType'
+                      beneficiaryDescription1:
+                        $ref: '#/components/schemas/descriptionType'
+                      beneficiaryDescription2:
+                        $ref: '#/components/schemas/descriptionType'
+                      beneficiaryDescription3:
+                        $ref: '#/components/schemas/descriptionType'
+                      beneficiaryDescription4:
+                        $ref: '#/components/schemas/descriptionType'
+                      companyDetails:
+                        $ref: '#/components/schemas/companyType'
+                    additionalProperties: false
+                other:
+                  type: array
+                  minItems: 1
+                  maxItems: 25
+                  items:
+                    type: object
+                    properties:
+                      otherBeneficiaryDescription:
+                        $ref: '#/components/schemas/descriptionType'
+                      countryOfResidence:
+                        $ref: '#/components/schemas/countryType'
+                    additionalProperties: false
+              additionalProperties: false
+          required:
+            - leadTrustee
+          additionalProperties: false
+      required:
+        - trustName
+        - identifiers
+        - trustStartDate
+        - correspondence
+        - entities
+      additionalProperties: false
+    dateString:
+      description: DD-MM-YYYY
+      type: string
+      pattern: "^(29[/]02[/]((15|16|17|18|19|20)([2468][048]|[13579][26]|0[48])|2000|1600)|((0[1-9]|1[0-9]|2[0-9]|30)[/](0[469]|11)[/](15|16|17|18|19|20)[0-9]{2}|(0[1-9]|[12][0-9]|3[01])[/](0[13578]|1[02])[/](15|16|17|18|19|20)[0-9]{2}|(0[1-9]|1[0-9]|2[0-8])[/]02[/](15|16|17|18|19|20)[0-9]{2}))$"
+    monthYearString:
+      description: MM-YYYY
+      type: string
+      pattern: "^(0[1-9]|1[0-2])/(15|16|17|18|19|20)[0-9]{2}$"
+    countryType:
+      description: Country name
+      type: string
+      pattern: "^[A-Z ,-.Ç&'/]{1,44}$"
+    nonUKCountryType:
+      description: Non-UK Country name
+      type: string
+      pattern: "^(?!(UNITED KINGDOM$))[A-Z ,-.Ç&'/]{1,44}$"
+    addressLineType:
+      description: 'format - Capitalised Case'
+      type: string
+      pattern: "^[a-zA-Z0-9 ,.()/&'-]{1,35}$"
+    nameString:
+      type: string
+      pattern: "^[A-Z0-9 ,.()/&'-]{1,35}$"
+    orgNameString:
+      type: string
+      pattern: "^[A-Z0-9 ,.()/&'-]{1,105}$"
+    orgName56String:
+      description: 'format - Capitalised Case'
+      type: string
+      pattern: "^[a-zA-Z0-9 ,.()/&'-]{1,56}$"
+    addressType:
+      type: object
+      oneOf:
+        - description: UK Address
+          type: object
+          properties:
+            line1:
+              $ref: '#/components/schemas/addressLineType'
+            line2:
+              $ref: '#/components/schemas/addressLineType'
+            line3:
+              $ref: '#/components/schemas/addressLineType'
+            line4:
+              $ref: '#/components/schemas/addressLineType'
+            postCode:
+              type: string
+              pattern: "^[A-Z0-9 ]{1,10}$"
+            country:
+              type: string
+              enum:
+                - UNITED KINGDOM
+          required:
+            - line1
+            - line2
+            - postCode
+            - country
+          additionalProperties: false
+        - description: Non- UK Address
+          type: object
+          properties:
+            line1:
+              $ref: '#/components/schemas/addressLineType'
+            line2:
+              $ref: '#/components/schemas/addressLineType'
+            line3:
+              $ref: '#/components/schemas/addressLineType'
+            line4:
+              $ref: '#/components/schemas/addressLineType'
+            country:
+              $ref: '#/components/schemas/nonUKCountryType'
+          required:
+            - line1
+            - line2
+            - country
+          additionalProperties: false
+    individualType:
+      type: object
+      properties:
+        firstName:
+          $ref: '#/components/schemas/nameString'
+        middleName:
+          $ref: '#/components/schemas/nameString'
+        lastName:
+          $ref: '#/components/schemas/nameString'
+        dateOfBirth:
+          $ref: '#/components/schemas/monthYearString'
+        nationality:
+          $ref: '#/components/schemas/countryType'
+        countryOfResidence:
+          $ref: '#/components/schemas/countryType'
+      required:
+        - firstName
+        - lastName
+      additionalProperties: false
+    companyType:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/orgNameString'
+        countryOfResidence:
+          $ref: '#/components/schemas/countryType'
+      required:
+        - name
+      additionalProperties: false
+    descriptionType:
+      type: string
+      pattern: "^[0-9A-Z{À-˿’}\\- \u005C&`'^]{1,70}$"
+    trusteeType:
+      description: Trustees max 25
+      type: object
+      properties:
+        trusteeIndividual:
+          $ref: '#/components/schemas/individualType'
+        trusteeCompany:
+          $ref: '#/components/schemas/companyType'
+      additionalProperties: false
+    utrType:
+      description: Unique Tax Reference Number
+      type: string
+      pattern: "^[0-9]{10}$"
+    urnType:
+      description: Unique Reference Number
+      type: string
+      pattern: "^[0-9A-Z]{15}$"
+  examples:
+    ServiceUnavailable:
+      value:
+        failures:
+          - code: SERVICE_UNAVAILABLE
+            reason: Dependent systems are currently not responding.
+    ServerError:
+      value:
+        failures:
+          - code: SERVER_ERROR
+            reason: IF is currently experiencing problems that require live service intervention.
+    Error_InvalidIDType:
+      value:
+        failures:
+          - code: INVALID_IDTYPE
+            reason: Submission has not passed validation. Invalid parameter idType.
+    Error_InvalidIDValue:
+      value:
+        failures:
+          - code: INVALID_IDVALUE
+            reason: Submission has not passed validation. Invalid parameter idValue.
+    Error_BusinessValidation:
+      value:
+        failures:
+          - code: BUSINESS_VALIDATION
+            reason: The remote end point has indicated the request could not be processed.
+    Error_InvalidCorrelationId:
+      value:
+        failures:
+          - code: INVALID_CORRELATIONID
+            reason: Submission has not passed validation. Invalid header CorrelationId.
+    Error_NotFound:
+      value:
+        failures:
+          - code: NO_DATA_FOUND
+            reason:   The remote endpoint has indicated that no data can be found for the given identifier.
+    Sample_Response:
+      value:
+        submissionDate: 12/12/2020
+        trustName: HMRC Trust
+        identifiers:
+          utr: '2134514321'
+          urn: XATRUST80000001
+        trustStartDate: 12/12/2020
+        correspondence:
+          address:
+            line1: 1010 Easy St
+            line2: Ottawa
+            line3: Glovers Street
+            line4: Baker Street
+            postCode: TF3 4ER
+            country: UNITED KINGDOM
+          welsh: true
+          braille: true
+        entities:
+          leadTrustee:
+            leadTrusteeIndividual:
+              firstName: PETER
+              middleName: THOMAS
+              lastName: PAUL
+              dateOfBirth: 12/1500
+              countryOfResidence: CURAÇAO
+          beneficiary:
+            individual:
+              - firstName: PETER
+                middleName: THOMAS
+                lastName: PAUL
+                dateOfBirth: 12/1999
+                nationality: UNITED KINGDOM
+                countryOfResidence: IRELAND
+              - firstName: TOM
+                middleName: THOMAS
+                lastName: PAUL
+                dateOfBirth: 12/1897
+                nationality: IRELAND
+                countryOfResidence: UNITED KINGDOM
+            company:
+              - name: ABC COMPANY LTD
+                countryOfResidence: UNITED KINGDOM
+              - name: XYZ COMPANY LTD
+                countryOfResidence: IRELAND
+            trust:
+              - name: ABC TRUST LTD
+                countryOfResidence: UNITED KINGDOM
+              - name: XYZ TRUST LTD
+                countryOfResidence: IRELAND
+            charity:
+              - name: ABC CHARITY LTD
+                countryOfResidence: IRELAND
+              - name: XYZ CHARITY LTD
+                countryOfResidence: UNITED KINGDOM
+            unidentified:
+              - beneficiaryDescription: BENEFICIARY DESCRIPTION 1
+              - beneficiaryDescription: BENEFICIARY DESCRIPTION 2
+            large:
+              - beneficiaryDescription: DESCRIPTION OF YOUR BENEFICIARIES AS WRITTEN IN THE TRUST DEED
+                beneficiaryDescription1: DESCRIPTION OF YOUR BENEFICIARIES AS WRITTEN IN THE TRUST DEED 1
+                beneficiaryDescription2: DESCRIPTION OF YOUR BENEFICIARIES AS WRITTEN IN THE TRUST DEED 2
+                beneficiaryDescription3: DESCRIPTION OF YOUR BENEFICIARIES AS WRITTEN IN THE TRUST DEED 3
+                beneficiaryDescription4: DESCRIPTION OF YOUR BENEFICIARIES AS WRITTEN IN THE TRUST DEED 4
+                companyDetails:
+                  name: ABC LARGE LTD
+                  countryOfResidence: IRELAND
+              - beneficiaryDescription: DESCRIPTION OF YOUR BENEFICIARIES AS WRITTEN IN THE TRUST DEED
+                beneficiaryDescription1: DESCRIPTION OF YOUR BENEFICIARIES AS WRITTEN IN THE TRUST DEED 1
+                beneficiaryDescription2: DESCRIPTION OF YOUR BENEFICIARIES AS WRITTEN IN THE TRUST DEED 2
+                beneficiaryDescription3: DESCRIPTION OF YOUR BENEFICIARIES AS WRITTEN IN THE TRUST DEED 3
+                beneficiaryDescription4: DESCRIPTION OF YOUR BENEFICIARIES AS WRITTEN IN THE TRUST DEED 4
+                companyDetails:
+                  name: XYZ LARGE LTD
+                  countryOfResidence: IRELAND
+            other:
+              - otherBeneficiaryDescription: OTHER BENEFICIARY DESCRIPTION 1
+                countryOfResidence: UNITED KINGDOM
+              - otherBeneficiaryDescription: OTHER BENEFICIARY DESCRIPTION 2
+                countryOfResidence: IRELAND
