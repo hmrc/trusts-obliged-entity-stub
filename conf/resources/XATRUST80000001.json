@@ -1,8 +1,7 @@
 {
   "submissionDate" : "12/12/2020",
-  "trustName" : "Hmrc Trust",
+  "trustName" : "Hmrc Non Taxable Trust",
   "identifiers" : {
-    "utr" : "2134514321",
     "urn" : "XATRUST80000001"
   },
   "trustStartDate" : "12/12/2020",
