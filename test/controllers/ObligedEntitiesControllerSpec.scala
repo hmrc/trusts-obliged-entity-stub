@@ -26,7 +26,7 @@ class ObligedEntitiesControllerSpec extends SpecBase {
   private implicit val cc: ControllerComponents = app.injector.instanceOf[ControllerComponents]
   private val headerValidatorAction: HeaderValidatorAction = app.injector.instanceOf[HeaderValidatorAction]
 
-  private val obligedEntitiesSchema = "/resources/schemas/Response_Schema-v1.0.0.json"
+  private val obligedEntitiesSchema = "/resources/schemas/Response_Schema-v1.1.0.json"
   private val obligedEntitiesValidator = new ValidationService().get(obligedEntitiesSchema)
 
   private val SUT = app.injector.instanceOf[ObligedEntitiesController]
