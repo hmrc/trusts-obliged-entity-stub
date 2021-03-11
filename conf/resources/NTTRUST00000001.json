@@ -1,0 +1,148 @@
+{
+  "submissionDate": "2020-09-01",
+  "trustName" : "HMRC Non-Taxable Trust",
+  "identifiers" : {
+    "urn" : "NTTRUST00000001"
+  },
+  "trustStartDate" : "2020-04-06",
+  "correspondence": {
+    "abroadIndicator": false,
+    "name": "1234567890 QwErTyUiOp ,.(/)&'- name",
+    "address": {
+      "line1": "1234567890 QwErTyUiOp ,.(/)&'- name",
+      "line2": "1234567890 QwErTyUiOp ,.(/)&'- name",
+      "postCode": "SR2 7UY",
+      "country": "GB"
+    },
+    "phoneNumber": "+123456789012345678",
+    "welsh": false,
+    "braille": false
+  },
+  "declaration": {
+    "name": {
+      "firstName": "1234567890 QwErTyUiOp ,.(\/)&'- name",
+      "lastName": "1234567890 QwErTyUiOp ,.(\/)&'- name"
+    },
+    "address": {
+      "line1": "DECLARED WITH NINO",
+      "line2": "DECLARED WITH NINO",
+      "postCode": "XX1 1XX",
+      "country": "GB"
+    }
+  },
+  "entities": {
+    "beneficiary": {
+      "individualDetails": [
+        {
+          "lineNo": "1",
+          "bpMatchStatus": "98",
+          "name": {
+            "firstName": "1234567890 QwErTyUiOp ,.(\/)&'- name",
+            "lastName": "1234567890 QwErTyUiOp ,.(\/)&'- name"
+          },
+          "legallyIncapable": true,
+          "entityStart": "2019-09-23"
+        },
+        {
+          "lineNo": "2",
+          "bpMatchStatus": "98",
+          "name": {
+            "firstName": "Daniel",
+            "lastName": "Smith"
+          },
+          "legallyIncapable": false,
+          "entityStart": "2019-09-23"
+        }
+      ],
+      "company": [
+        {
+          "lineNo": "1",
+          "bpMatchStatus": "98",
+          "organisationName": "1234567890 QwErTyUiOp ,.(/)&'- name",
+          "entityStart": "2019-09-23"
+        }
+      ],
+      "trust": [
+        {
+          "lineNo": "1",
+          "bpMatchStatus": "98",
+          "organisationName": "1234567890 QwErTyUiOp ,.(/)&'- name",
+          "entityStart": "2019-09-23"
+        }
+      ],
+      "charity": [
+        {
+          "lineNo": "1",
+          "bpMatchStatus": "98",
+          "organisationName": "1234567890 QwErTyUiOp ,.(/)&'- name",
+          "entityStart": "2019-09-23"
+        }
+      ],
+      "unidentified": [
+        {
+          "lineNo": "1",
+          "bpMatchStatus": "98",
+          "description": "1234567890&`'^ -QWERTYqwertyzxcvbnmasdfghjklpoiuypoiuytr",
+          "entityStart": "2019-09-23"
+        }
+      ],
+      "large": [
+        {
+          "lineNo": "1",
+          "bpMatchStatus": "98",
+          "organisationName": "1234567890 QwErTyUiOp ,.(/)&'- name",
+          "description": "1234567890&`'^ -QWERTYqwertyzxcvbnmasdfghjklpoiuypoiuytr",
+          "numberOfBeneficiary": "1",
+          "entityStart": "2019-09-23"
+        }
+      ],
+      "other": [
+        {
+          "lineNo": "1",
+          "bpMatchStatus": "98",
+          "description": "1234567890&`'^ -QWERTYqwertyzxcvbnmasdfghjklpoiuypoiuytr",
+          "entityStart": "2019-09-23"
+        }
+      ]
+    },
+    "deceased": {
+      "lineNo": "1",
+      "bpMatchStatus": "98",
+      "name": {
+        "firstName": "John",
+        "lastName": "O'Connor"
+      },
+      "entityStart": "2019-09-23"
+    },
+    "leadTrustees": {
+      "lineNo": "1",
+      "bpMatchStatus": "01",
+      "name": {
+        "firstName": "1234567890 QwErTyUiOp ,.(\/)&'- name",
+        "lastName": "1234567890 QwErTyUiOp ,.(\/)&'- name"
+      },
+      "dateOfBirth": "2015-03-20",
+      "identification": {
+        "nino": "SJ123456B"
+      },
+      "phoneNumber": "+123456789012345678",
+      "countryOfResidence": "DE",
+      "nationality": "DE",
+      "entityStart": "2019-09-23"
+    },
+    "trustees": [
+      {
+        "trusteeInd": {
+          "lineNo": "1",
+          "bpMatchStatus": "98",
+          "name": {
+            "firstName": "1234567890 QwErTyUiOp ,.(/)&'- name",
+            "lastName": "1234567890 QwErTyUiOp ,.(/)&'- name"
+          },
+          "legallyIncapable": false,
+          "entityStart": "2019-09-23"
+        }
+      }
+    ]
+  }
+}
