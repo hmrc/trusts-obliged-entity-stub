@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,12 @@
 
 package controllers
 
-import play.api.libs.json.JsValue
-import play.api.mvc.ControllerComponents
 import models.SuccessfulValidation
+import play.api.libs.json.JsValue
 import play.api.test.Helpers._
 import service.ValidationService
 
 class ObligedEntitiesControllerSpec extends SpecBase {
-  private implicit val cc: ControllerComponents = app.injector.instanceOf[ControllerComponents]
-  private val headerValidatorAction: HeaderValidatorAction = app.injector.instanceOf[HeaderValidatorAction]
 
   private val obligedEntitiesSchema = "/resources/schemas/Response_Schema-v1.1.0.json"
   private val obligedEntitiesValidator = new ValidationService().get(obligedEntitiesSchema)
@@ -77,13 +74,13 @@ class ObligedEntitiesControllerSpec extends SpecBase {
     "return OK with valid processed payload for 5000000000" in testObligedEntitiesUtr("5000000000")
 
     "obliged entities not available for provided utr" in {
-      val resultJson = getObligedEntitesAsJson("0000000404", UTR_TYPE, NOT_FOUND)
+      val resultJson = getObligedEntitiesAsJson("0000000404", UTR_TYPE, NOT_FOUND)
 
       (resultJson \ "code").as[String] mustBe "RESOURCE_NOT_FOUND"
     }
 
     "return Bad Reguest for invalid id" in {
-      val resultJson = getObligedEntitesAsJson("0000000400AAAAA", UTR_TYPE, BAD_REQUEST)
+      val resultJson = getObligedEntitiesAsJson("0000000400AAAAA", UTR_TYPE, BAD_REQUEST)
 
       (resultJson \ "code").as[String] mustBe "INVALID_ID"
       (resultJson \ "reason").as[String] mustBe "Submission has not passed validation. Invalid parameter idValue."
@@ -115,14 +112,18 @@ class ObligedEntitiesControllerSpec extends SpecBase {
       testObligedEntitiesUrn("XATRUST80000001")
     }
 
+    "return OK with valid processed payload for NTTRUST00000001" in {
+      testObligedEntitiesUrn("NTTRUST00000001")
+    }
+
     "obliged entities not available for provided urn" in {
-      val resultJson = getObligedEntitesAsJson("0000000404AAAAA", URN_TYPE, NOT_FOUND)
+      val resultJson = getObligedEntitiesAsJson("0000000404AAAAA", URN_TYPE, NOT_FOUND)
 
       (resultJson \ "code").as[String] mustBe "RESOURCE_NOT_FOUND"
     }
 
     "return Bad Reguest for invalid id" in {
-      val resultJson = getObligedEntitesAsJson("1000000001", URN_TYPE, BAD_REQUEST)
+      val resultJson = getObligedEntitiesAsJson("1000000001", URN_TYPE, BAD_REQUEST)
 
       (resultJson \ "code").as[String] mustBe "INVALID_ID"
       (resultJson \ "reason").as[String] mustBe "Submission has not passed validation. Invalid parameter idValue."
@@ -130,31 +131,31 @@ class ObligedEntitiesControllerSpec extends SpecBase {
 
   }
 
- "getObligedEntity Failure" should {
+  "getObligedEntity Failure" should {
     "return Bad Reguest for invalid type" in {
-     val resultJson = getObligedEntitesAsJson("0000000400AAAAA", "XXXX", BAD_REQUEST)
+      val resultJson = getObligedEntitiesAsJson("0000000400AAAAA", "XXXX", BAD_REQUEST)
 
-     (resultJson \ "code").as[String] mustBe "INVALID_IDTYPE"
-     (resultJson \ "reason").as[String] mustBe "Submission has not passed validation. Invalid parameter idType."
+      (resultJson \ "code").as[String] mustBe "INVALID_IDTYPE"
+      (resultJson \ "reason").as[String] mustBe "Submission has not passed validation. Invalid parameter idType."
     }
 
-   "return Unprocessable Entity Error when des having internal errors" in {
-     val resultJson = getObligedEntitesAsJson("0000000422", UTR_TYPE, UNPROCESSABLE_ENTITY)
+    "return Unprocessable Entity Error when des having internal errors" in {
+      val resultJson = getObligedEntitiesAsJson("0000000422", UTR_TYPE, UNPROCESSABLE_ENTITY)
 
-     (resultJson \ "code").as[String] mustBe "BUSINESS_VALIDATION"
-     (resultJson \ "reason").as[String] mustBe "The remote end point has indicated the request could not be processed."
-   }
+      (resultJson \ "code").as[String] mustBe "BUSINESS_VALIDATION"
+      (resultJson \ "reason").as[String] mustBe "The remote end point has indicated the request could not be processed."
+    }
 
 
     "return Internal Server Error when des having internal errors" in {
-      val resultJson = getObligedEntitesAsJson("0000000500", UTR_TYPE, INTERNAL_SERVER_ERROR)
+      val resultJson = getObligedEntitiesAsJson("0000000500", UTR_TYPE, INTERNAL_SERVER_ERROR)
 
       (resultJson \ "code").as[String] mustBe "SERVER_ERROR"
       (resultJson \ "reason").as[String] mustBe "IF is currently experiencing problems that require live service intervention."
     }
 
     "return 503 service unavailable when dependent service is unavailable" in {
-      val resultJson = getObligedEntitesAsJson("0000000503", UTR_TYPE, SERVICE_UNAVAILABLE)
+      val resultJson = getObligedEntitiesAsJson("0000000503", UTR_TYPE, SERVICE_UNAVAILABLE)
 
       (resultJson \ "code").as[String] mustBe "SERVICE_UNAVAILABLE"
       (resultJson \ "reason").as[String] mustBe "Dependent systems are currently not responding."
@@ -162,7 +163,7 @@ class ObligedEntitiesControllerSpec extends SpecBase {
 
   }
 
-  private def getObligedEntitesAsJson(id: String, idType: String, expectedResult: Int): JsValue = {
+  private def getObligedEntitiesAsJson(id: String, idType: String, expectedResult: Int): JsValue = {
     val request = createGetRequestWithValidHeaders(s"/trusts/obliged-entities/$idType/$id")
     val result = SUT.getObligedEntity(id, idType).apply(request)
     status(result) must be(expectedResult)
@@ -170,8 +171,8 @@ class ObligedEntitiesControllerSpec extends SpecBase {
     contentAsJson(result)
   }
 
-  private def getObligedEntitesAsValidatedJson(id: String, idType: String): JsValue = {
-    val resultJson = getObligedEntitesAsJson(id, idType, OK)
+  private def getObligedEntitiesAsValidatedJson(id: String, idType: String): JsValue = {
+    val resultJson = getObligedEntitiesAsJson(id, idType, OK)
 
     val validationResult = obligedEntitiesValidator.validateAgainstSchema(resultJson.toString)
     validationResult mustBe SuccessfulValidation
@@ -180,13 +181,13 @@ class ObligedEntitiesControllerSpec extends SpecBase {
   }
 
   private def testObligedEntitiesUtr(utr: String) = {
-    val resultJson = getObligedEntitesAsValidatedJson(utr, UTR_TYPE)
+    val resultJson = getObligedEntitiesAsValidatedJson(utr, UTR_TYPE)
 
     (resultJson \ "identifiers" \ "utr").as[String] mustBe utr
   }
 
   private def testObligedEntitiesUrn(urn: String) = {
-    val resultJson = getObligedEntitesAsValidatedJson(urn, URN_TYPE)
+    val resultJson = getObligedEntitiesAsValidatedJson(urn, URN_TYPE)
 
     (resultJson \ "identifiers" \ "urn").as[String] mustBe urn
   }

@@ -1,0 +1,88 @@
+{
+  "submissionDate": "01/09/2020",
+  "trustName" : "HMRC Non-Taxable Trust",
+  "identifiers" : {
+    "urn" : "NTTRUST00000001"
+  },
+  "trustStartDate" : "06/04/2020",
+  "correspondence": {
+    "address": {
+      "line1": "1234567890 QwErTyUiOp ,.(/)&'- name",
+      "line2": "1234567890 QwErTyUiOp ,.(/)&'- name",
+      "postCode": "SR2 7UY",
+      "country": "UNITED KINGDOM"
+    },
+    "welsh": false,
+    "braille": false
+  },
+  "entities": {
+    "beneficiary": {
+      "individual": [
+        {
+          "firstName": "1234567890 QWERTYUIOP ,.(\/)&'- NAME",
+          "lastName": "1234567890 QWERTYUIOP ,.(\/)&'- NAME"
+        },
+        {
+          "firstName": "DANIEL",
+          "lastName": "SMITH"
+        }
+      ],
+      "company": [
+        {
+          "name": "1234567890 QWERTYUIOP ,.(/)&'- NAME"
+        }
+      ],
+      "trust": [
+        {
+          "name": "1234567890 QWERTYUIOP ,.(/)&'- NAME"
+        }
+      ],
+      "charity": [
+        {
+          "name": "1234567890 QWERTYUIOP ,.(/)&'- NAME"
+        }
+      ],
+      "unidentified": [
+        {
+          "beneficiaryDescription": "1234567890&`'^ -QWERTYQWERTYZXCVBNMASDFGHJKLPOIUYPOIUYTR"
+        }
+      ],
+      "large": [
+        {
+          "beneficiaryDescription": "1234567890&`'^ -QWERTYQWERTYZXCVBNMASDFGHJKLPOIUYPOIUYTR",
+          "companyDetails": {
+            "name": "1234567890 QWERTYUIOP ,.(/)&'- NAME"
+          }
+        }
+      ],
+      "other": [
+        {
+          "otherBeneficiaryDescription": "1234567890&`'^ -QWERTYQWERTYZXCVBNMASDFGHJKLPOIUYPOIUYTR"
+        }
+      ]
+    },
+    "settlors": {
+      "deceased": {
+        "firstName": "JOHN",
+        "lastName": "O'CONNOR"
+      }
+    },
+    "leadTrustee": {
+      "leadTrusteeIndividual": {
+        "firstName": "1234567890 QWERTYUIOP ,.(/)&'- NAME",
+        "lastName": "1234567890 QWERTYUIOP ,.(/)&'- NAME",
+        "dateOfBirth": "03/2015",
+        "nationality": "DE",
+        "countryOfResidence": "DE"
+      }
+    },
+    "trustees": [
+      {
+        "trusteeIndividual": {
+          "firstName": "1234567890 QWERTYUIOP ,.(/)&'- NAME",
+          "lastName": "1234567890 QWERTYUIOP ,.(/)&'- NAME"
+        }
+      }
+    ]
+  }
+}

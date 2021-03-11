@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,7 +58,7 @@ class ObligedEntitiesController @Inject()(headerValidator: HeaderValidatorAction
       case "1000000010" =>
         jsonResult(id)
       // 5mld non-taxable trusts with URN
-      case "1234567890AAAAA" | "0000000001AAAAA" | "0000000002AAAAA" | "0000000003AAAAA" | "0000000004AAAAA" | "XATRUST80000001" =>
+      case "1234567890AAAAA" | "0000000001AAAAA" | "0000000002AAAAA" | "0000000003AAAAA" | "0000000004AAAAA" | "XATRUST80000001" | "NTTRUST00000001" =>
         jsonResult(id)
       // 5mld non-taxable trusts with UTR
       case "1000000103" =>
