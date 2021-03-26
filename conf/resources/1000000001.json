@@ -78,10 +78,10 @@
       ],
       "unidentified": [
         {
-          "beneficiaryDescription": "BENEFICIARY DESCRIPTION 1"
+          "beneficiaryDescription": "BENEFICIARY\\DESCRIPTION 1"
         },
         {
-          "beneficiaryDescription": "BENEFICIARY DESCRIPTION 2"
+          "beneficiaryDescription": "BENEFICIARY\\\\DESCRIPTION 2"
         }
       ],
       "large": [

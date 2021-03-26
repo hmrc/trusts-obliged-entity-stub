@@ -139,11 +139,37 @@
 				},
 				"trustees": {
 					"type": "array",
+					"description": "Trustees max 25",
 					"minItems": 1,
 					"maxItems": 25,
 					"items": {
-						"$ref": "#/definitions/trusteeType"
-					}
+					"anyOf": [
+						{
+							"description": "Individual",
+							"properties": {
+								"trusteeIndividual": {
+									"$ref": "#/definitions/individualType"
+								}
+							},
+							"required": [
+								"trusteeIndividual"
+							],
+							"additionalProperties": false
+						},
+						{
+							"description": "Company",
+							"properties": {
+								"trusteeCompany": {
+									"$ref": "#/definitions/companyType"
+								}
+							},
+							"required": [
+								"trusteeCompany"
+							],
+							"additionalProperties": false
+						}
+					]
+				}
 				},
 				"naturalPerson": {
 					"type": "array",
@@ -467,20 +493,7 @@
 		},
 		"descriptionType": {
 			"type": "string",
-			"pattern": "^[0-9A-Z{À-˿’}\\- \u005C&`'^]{1,70}$"
-		},
-		"trusteeType": {
-			"description": "Trustees max 25",
-			"type": "object",
-			"properties": {
-				"trusteeIndividual": {
-					"$ref": "#/definitions/individualType"
-				},
-				"trusteeCompany": {
-					"$ref": "#/definitions/companyType"
-				}
-			},
-			"additionalProperties": false
+			"pattern": "^[0-9A-Z{À-˿’}\\- \\u005C&`'^]{1,70}$"
 		},
 		"utrType": {
 			"description": "Unique Tax Reference Number",
