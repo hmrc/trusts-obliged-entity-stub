@@ -23,7 +23,7 @@ import service.ValidationService
 
 class ObligedEntitiesControllerSpec extends SpecBase {
 
-  private val obligedEntitiesSchema = "/resources/schemas/Response_Schema-v1.1.0.json"
+  private val obligedEntitiesSchema = "/resources/schemas/API1584_schema_1.2.0.json"
   private val obligedEntitiesValidator = new ValidationService().get(obligedEntitiesSchema)
 
   private val SUT = app.injector.instanceOf[ObligedEntitiesController]

@@ -2,7 +2,7 @@
 info:
   title: 'API#1584 Get Trust Obliged Entities Data'
   description: This API provides the capability for retrieving Trust details for an obliged entity.
-  version: 1.0.0
+  version: 1.1.0
   contact:
     name: Denin Thomas
     email: denin.thomas@hmrc.gov.uk
@@ -45,6 +45,8 @@ paths:
         1.0.0   14-10-2020  Denin Thomas  Baselined with following changes
                                           -Updated $.correspondence.address.country regex to accept only uppercase
                                           -Documentation changes - trustName and address line 1 - 4 to be Capitalized Case
+        1.1.0   08-12-2020  Denin Thomas  Updated 'trustees' object to accept an array of 'trusteeIndividual' and 'trusteeCompany'
+        1.2.0   22-03-2021  Denin Thomas  Updated regex for 'descriptionType' to support '\'
       operationId: getTrustObligedEntitiesData
       tags:
         - 'API#1584'
@@ -323,10 +325,25 @@ components:
                   additionalProperties: false
             trustees:
               type: array
+              description: Trustees max 25
               minItems: 1
               maxItems: 25
               items:
-                $ref: '#/components/schemas/trusteeType'
+                anyOf:
+                - description: Individual
+                  properties:
+                    trusteeIndividual:
+                      "$ref": "#/components/schemas/individualType"
+                  required:
+                  - trusteeIndividual
+                  additionalProperties: false
+                - description: Company
+                  properties:
+                    trusteeCompany:
+                      "$ref": "#/components/schemas/companyType"
+                  required:
+                  - trusteeCompany
+                  additionalProperties: false
             naturalPerson:
               type: array
               minItems: 1
@@ -557,15 +574,6 @@ components:
     descriptionType:
       type: string
       pattern: "^[0-9A-Z{À-˿’}\\- \u005C&`'^]{1,70}$"
-    trusteeType:
-      description: Trustees max 25
-      type: object
-      properties:
-        trusteeIndividual:
-          $ref: '#/components/schemas/individualType'
-        trusteeCompany:
-          $ref: '#/components/schemas/companyType'
-      additionalProperties: false
     utrType:
       description: Unique Tax Reference Number
       type: string
@@ -636,6 +644,60 @@ components:
               lastName: PAUL
               dateOfBirth: 12/1500
               countryOfResidence: CURAÇAO
+          trustees:
+          - trusteeIndividual:
+              firstName: FIRST
+              middleName: MIDDLE
+              lastName: LAST
+              dateOfBirth: '08/1967'
+              nationality: UNITED KINGDOM
+              countryOfResidence: UNITED KINGDOM
+          - trusteeIndividual:
+              firstName: FIRST
+              middleName: MIDDLE
+              lastName: LAST
+              dateOfBirth: '08/1967'
+              nationality: UNITED KINGDOM
+              countryOfResidence: UNITED KINGDOM
+          - trusteeCompany:
+              name: ORGNAME
+              countryOfResidence: UNITED KINGDOM
+          naturalPerson:
+          - firstName: TOM
+            middleName: TOM
+            lastName: TOM
+            dateOfBirth: 01/1500
+            nationality: UNITED KINGDOM
+            countryOfResidence: UNITED KINGDOM
+          settlors:
+            settlorIndividual:
+            - firstName: TOM
+              middleName: TOM
+              lastName: TOM
+              dateOfBirth: 01/1500
+              nationality: UNITED KINGDOM
+              countryOfResidence: UNITED KINGDOM
+            settlorCompany:
+            - name: ABD LTD
+              countryOfResidence: UNITED KINGDOM
+            deceased:
+              firstName: TOM
+              middleName: TOM
+              lastName: TOM
+              dateOfBirth: 01/1500
+              nationality: UNITED KINGDOM
+              countryOfResidence: UNITED KINGDOM
+          protectors:
+            protectorIndividual:
+            - firstName: TOM
+              middleName: TOM
+              lastName: TOM
+              dateOfBirth: 01/1500
+              nationality: UNITED KINGDOM
+              countryOfResidence: UNITED KINGDOM
+            protectorCompany:
+            - name: ABD LTD
+              countryOfResidence: UNITED KINGDOM    
           beneficiary:
             individual:
               - firstName: PETER
@@ -666,7 +728,7 @@ components:
               - name: XYZ CHARITY LTD
                 countryOfResidence: UNITED KINGDOM
             unidentified:
-              - beneficiaryDescription: BENEFICIARY DESCRIPTION 1
+              - beneficiaryDescription: BENEFICIARY \DESCRIPTION 1
               - beneficiaryDescription: BENEFICIARY DESCRIPTION 2
             large:
               - beneficiaryDescription: DESCRIPTION OF YOUR BENEFICIARIES AS WRITTEN IN THE TRUST DEED
@@ -678,15 +740,15 @@ components:
                   name: ABC LARGE LTD
                   countryOfResidence: IRELAND
               - beneficiaryDescription: DESCRIPTION OF YOUR BENEFICIARIES AS WRITTEN IN THE TRUST DEED
-                beneficiaryDescription1: DESCRIPTION OF YOUR BENEFICIARIES AS WRITTEN IN THE TRUST DEED 1
-                beneficiaryDescription2: DESCRIPTION OF YOUR BENEFICIARIES AS WRITTEN IN THE TRUST DEED 2
+                beneficiaryDescription1: DESCRIPTION OF YOUR \BENEFICIARIES AS WRITTEN IN THE TRUST DEED 1
+                beneficiaryDescription2: DESCRIPTION OF YOUR \BENEFICIARIES AS WRITTEN IN THE TRUST DEED 2
                 beneficiaryDescription3: DESCRIPTION OF YOUR BENEFICIARIES AS WRITTEN IN THE TRUST DEED 3
                 beneficiaryDescription4: DESCRIPTION OF YOUR BENEFICIARIES AS WRITTEN IN THE TRUST DEED 4
                 companyDetails:
                   name: XYZ LARGE LTD
                   countryOfResidence: IRELAND
             other:
-              - otherBeneficiaryDescription: OTHER BENEFICIARY DESCRIPTION 1
+              - otherBeneficiaryDescription: OTHER \BENEFICIARY DESCRIPTION 1
                 countryOfResidence: UNITED KINGDOM
               - otherBeneficiaryDescription: OTHER BENEFICIARY DESCRIPTION 2
                 countryOfResidence: IRELAND
