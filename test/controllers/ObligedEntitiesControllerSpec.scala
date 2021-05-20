@@ -20,6 +20,7 @@ import models.SuccessfulValidation
 import play.api.libs.json.JsValue
 import play.api.test.Helpers._
 import service.ValidationService
+import org.scalatest.matchers.must.Matchers._
 
 class ObligedEntitiesControllerSpec extends SpecBase {
 
