@@ -16,13 +16,12 @@
 
 package controllers
 
-import org.scalatestplus.play.PlaySpec
+import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 
-
-abstract class SpecBase extends PlaySpec with GuiceOneServerPerSuite {
+abstract class SpecBase extends AnyWordSpec with GuiceOneServerPerSuite {
 
   val ENVIRONMENT_HEADER = "Environment"
   val TOKEN_HEADER = "Authorization"
