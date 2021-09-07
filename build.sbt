@@ -12,7 +12,7 @@ lazy val microservice = Project(appName, file("."))
     ScoverageKeys.coverageExcludedFiles := "<empty>;.*config.*;Reverse.*;.*filters.*;.*handlers.*;.*components.*;.*repositories.*;" +
       ".*BuildInfo.*;.*Routes.*;.*GuiceInjector;" +
       ".*ControllerConfiguration;.*LanguageSwitchController",
-    ScoverageKeys.coverageMinimum := 70,        // all new JSON files must be unit tested
+    ScoverageKeys.coverageMinimum := 80,        // all new JSON files must be unit tested
     ScoverageKeys.coverageFailOnMinimum := true,
     ScoverageKeys.coverageHighlighting := true
   )
@@ -23,7 +23,16 @@ lazy val microservice = Project(appName, file("."))
     libraryDependencies              ++= AppDependencies.compile ++ AppDependencies.test,
     dependencyOverrides              ++= AppDependencies.overrides
   )
+  .settings(inConfig(Test)(testSettings))
   .settings(publishingSettings: _*)
   .configs(IntegrationTest)
   .settings(integrationTestSettings(): _*)
   .settings(resolvers += Resolver.jcenterRepo)
+
+lazy val testSettings: Seq[Def.Setting[_]] = Seq(
+  fork        := true,
+  javaOptions ++= Seq(
+    "-Dconfig.resource=test.application.conf",
+    "-Dlogger.resource=logback-test.xml"
+  )
+)
