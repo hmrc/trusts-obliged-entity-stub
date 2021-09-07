@@ -16,8 +16,8 @@
 
 package controllers
 
-import models.SuccessfulValidation
-import play.api.libs.json.JsValue
+import models.{DesValidationError, FailedValidation, SuccessfulValidation}
+import play.api.libs.json.{JsValue, Json}
 import play.api.test.Helpers._
 import service.ValidationService
 import org.scalatest.matchers.must.Matchers._
@@ -85,6 +85,30 @@ class ObligedEntitiesControllerSpec extends SpecBase {
 
       (resultJson \ "code").as[String] mustBe "INVALID_ID"
       (resultJson \ "reason").as[String] mustBe "Submission has not passed validation. Invalid parameter idValue."
+    }
+
+    "return a FailedValidation when given an invalid Json" in {
+      val resultJson = Json.toJson(
+        """{
+          |"key":"invalid json"
+          |}""".stripMargin
+      )
+
+      val validationResult = obligedEntitiesValidator.validateAgainstSchema(resultJson.toString())
+      validationResult mustBe FailedValidation(
+        "Invalid Json",
+        0,
+        List(
+          DesValidationError("""instance type (string) does not match any allowed primitive type (allowed: ["object"])""","/")
+        )
+      )
+    }
+
+    "return a FailedValidation when not given Json" in {
+        val resultJson = "Invalid Json"
+
+        val validationResult = obligedEntitiesValidator.validateAgainstSchema(resultJson)
+        validationResult mustBe FailedValidation("Not JSON",0,List())
     }
   }
 
