@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,14 @@
 
 package models
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
-trait ValidationResult
+sealed trait ValidationResult
 
 case class DesValidationError(message: String, location: String)
 
 object DesValidationError {
-  implicit val formats = Json.format[DesValidationError]
+  implicit val formats: OFormat[DesValidationError] = Json.format[DesValidationError]
 }
 
 
@@ -32,7 +32,7 @@ case class FailedValidation(message: String, code: Int, validationErrors: Seq[De
 
 
 object FailedValidation {
-  implicit val formats = Json.format[FailedValidation]
+  implicit val formats: OFormat[FailedValidation] = Json.format[FailedValidation]
 }
 
 case object SuccessfulValidation extends ValidationResult

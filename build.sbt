@@ -1,6 +1,4 @@
-import uk.gov.hmrc.DefaultBuildSettings.integrationTestSettings
 import scoverage.ScoverageKeys
-import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
 
 val appName = "trusts-obliged-entity-stub"
 
@@ -9,30 +7,18 @@ lazy val microservice = Project(appName, file("."))
   .disablePlugins(JUnitXmlReportPlugin) //Required to prevent https://github.com/scalatest/scalatest/issues/1427
   .settings(
     PlayKeys.playDefaultPort := 9851,
-    ScoverageKeys.coverageExcludedFiles := "<empty>;.*config.*;Reverse.*;.*filters.*;.*handlers.*;.*components.*;.*repositories.*;" +
-      ".*BuildInfo.*;.*Routes.*;.*GuiceInjector;" +
-      ".*ControllerConfiguration;.*LanguageSwitchController",
-    ScoverageKeys.coverageMinimumStmtTotal := 80,        // all new JSON files must be unit tested
+    ScoverageKeys.coverageExcludedFiles := "<empty>;.*config.*;Reverse.*;.*BuildInfo.*;.*Routes.*;.*GuiceInjector;" +
+      ".*LanguageSwitchController",
+    ScoverageKeys.coverageMinimumStmtTotal := 99,
     ScoverageKeys.coverageFailOnMinimum := true,
     ScoverageKeys.coverageHighlighting := true
   )
   .settings(
-    scalaVersion := "2.12.15",
-    SilencerSettings(),
+    scalaVersion := "2.13.11",
     majorVersion                     := 0,
     libraryDependencies              ++= AppDependencies.compile ++ AppDependencies.test,
-    dependencyOverrides              ++= AppDependencies.overrides
+    scalacOptions += "-Wconf:src=routes/.*:s"
   )
-  .settings(inConfig(Test)(testSettings))
-  .settings(publishingSettings: _*)
-  .configs(IntegrationTest)
-  .settings(integrationTestSettings(): _*)
-  .settings(resolvers += Resolver.jcenterRepo)
-
-lazy val testSettings: Seq[Def.Setting[_]] = Seq(
-  fork        := true,
-  javaOptions ++= Seq(
-    "-Dconfig.resource=test.application.conf",
-    "-Dlogger.resource=logback-test.xml"
-  )
-)
+  // To resolve a bug with version 2.x.x of the scoverage plugin - https://github.com/sbt/sbt/issues/6997
+  // Try to remove when sbt[ 1.8.0+ and scoverage is 2.0.7+
+  .settings(libraryDependencySchemes ++= Seq("org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always))
