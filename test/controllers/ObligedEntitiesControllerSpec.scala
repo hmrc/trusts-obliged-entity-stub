@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,13 @@
 package controllers
 
 import models.{DesValidationError, FailedValidation, SuccessfulValidation}
+import org.scalatest.matchers.must.Matchers._
 import play.api.libs.json.{JsValue, Json}
+import play.api.mvc.Result
 import play.api.test.Helpers._
 import service.ValidationService
-import org.scalatest.matchers.must.Matchers._
+
+import scala.concurrent.Future
 
 class ObligedEntitiesControllerSpec extends SpecBase {
 
@@ -99,16 +102,16 @@ class ObligedEntitiesControllerSpec extends SpecBase {
         "Invalid Json",
         0,
         List(
-          DesValidationError("""instance type (string) does not match any allowed primitive type (allowed: ["object"])""","/")
+          DesValidationError("""instance type (string) does not match any allowed primitive type (allowed: ["object"])""", "/")
         )
       )
     }
 
     "return a FailedValidation when not given Json" in {
-        val resultJson = "Invalid Json"
+      val resultJson = "Invalid Json"
 
-        val validationResult = obligedEntitiesValidator.validateAgainstSchema(resultJson)
-        validationResult mustBe FailedValidation("Not JSON",0,List())
+      val validationResult = obligedEntitiesValidator.validateAgainstSchema(resultJson)
+      validationResult mustBe FailedValidation("Not JSON", 0, List())
     }
   }
 
@@ -186,10 +189,46 @@ class ObligedEntitiesControllerSpec extends SpecBase {
       (resultJson \ "reason").as[String] mustBe "Dependent systems are currently not responding."
     }
 
+    "return 403 forbidden when env header is not present" in {
+      val result = getObligedEntitiesAsResponseWithoutHeader("0000000503", UTR_TYPE, ENVIRONMENT_HEADER)
+
+      status(result) must be(FORBIDDEN)
+    }
+
+    "return 401 unauthorized when auth header is not present" in {
+      val result = getObligedEntitiesAsResponseWithoutHeader("0000000503", UTR_TYPE, TOKEN_HEADER)
+
+      status(result) must be(UNAUTHORIZED)
+    }
+
+    "return 403 forbidden when CID header is not present" in {
+      val result = getObligedEntitiesAsResponseWithoutHeader("0000000503", UTR_TYPE, CORRELATIONID_HEADER)
+
+      status(result) must be(FORBIDDEN)
+    }
+
+    "return 403 forbidden when env header is invalid" in {
+      val result = getObligedEntitiesAsResponse("0000000503", UTR_TYPE, (ENVIRONMENT_HEADER, "XXX"))
+
+      status(result) must be(FORBIDDEN)
+    }
+
+    "return 401 unauthorized when auth header is invalid" in {
+      val result = getObligedEntitiesAsResponse("0000000503", UTR_TYPE, (TOKEN_HEADER, "XXX"))
+
+      status(result) must be(UNAUTHORIZED)
+    }
+
+    "return 403 forbidden when CID header is invalid" in {
+      val result = getObligedEntitiesAsResponse("0000000503", UTR_TYPE, (CORRELATIONID_HEADER, "XXX"))
+
+      status(result) must be(FORBIDDEN)
+    }
+
   }
 
   private def getObligedEntitiesAsJson(id: String, idType: String, expectedResult: Int): JsValue = {
-    val request = createGetRequestWithValidHeaders(s"/trusts/obliged-entities/$idType/$id")
+    val request = createGetRequestWithHeaders(s"/trusts/obliged-entities/$idType/$id", validHeaders)
     val result = SUT.getObligedEntity(id, idType).apply(request)
     status(result) must be(expectedResult)
     contentType(result).get mustBe "application/json"
@@ -215,5 +254,19 @@ class ObligedEntitiesControllerSpec extends SpecBase {
     val resultJson = getObligedEntitiesAsValidatedJson(urn, URN_TYPE)
 
     (resultJson \ "identifiers" \ "urn").as[String] mustBe urn
+  }
+
+  private def getObligedEntitiesAsResponse(id: String, idType: String, overrideHeader: (String, String)): Future[Result] = {
+    val newHeaders = validHeaders + overrideHeader
+    val request = createGetRequestWithHeaders(s"/trusts/obliged-entities/$idType/$id", newHeaders)
+    val result = SUT.getObligedEntity(id, idType).apply(request)
+    result
+  }
+
+  private def getObligedEntitiesAsResponseWithoutHeader(id: String, idType: String, headerToDelete: String): Future[Result] = {
+    val newHeaders = validHeaders - headerToDelete
+    val request = createGetRequestWithHeaders(s"/trusts/obliged-entities/$idType/$id", newHeaders)
+    val result = SUT.getObligedEntity(id, idType).apply(request)
+    result
   }
 }
