@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,7 +66,7 @@ class ObligedEntitiesController @Inject()(headerValidator: HeaderValidatorAction
       case "3000000001" | "3000000002" | "3000000003" | "3000000004" | "3000000005" | "3000000006" | "3000000007" | "3000000008"
            | "3000000009" | "3000000010" | "3000000012" =>
         jsonResult(id)
-      case "1234567890" | "1234567891" | "1234567892" | "1234567893" | "1234567894" | "1234567895" | "1234567896" | "1234567897" | "1234567898" | "1234567899" | "1000000005" | "2134514321" | "5174384721" | "1274834715" =>
+      case "1234567890" | "1234567891" | "1234567892" | "1234567893" | "1234567894" | "1234567895" | "1234567896" | "1234567897" | "1234567898" | "1234567899" | "1274834715" =>
         jsonResult(id)
       case "0000000422" =>
         Future.successful(UnprocessableEntity(jsonResponse422))
