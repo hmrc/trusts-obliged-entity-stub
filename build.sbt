@@ -1,25 +1,17 @@
-import scoverage.ScoverageKeys
+ThisBuild / scalaVersion := "2.13.13"
+ThisBuild / majorVersion := 0
 
-val appName = "trusts-obliged-entity-stub"
-
-lazy val microservice = Project(appName, file("."))
+lazy val microservice = Project("trusts-obliged-entity-stub", file("."))
   .enablePlugins(play.sbt.PlayScala, SbtDistributablesPlugin)
   .disablePlugins(JUnitXmlReportPlugin) //Required to prevent https://github.com/scalatest/scalatest/issues/1427
+  .settings(CodeCoverageSettings.settings)
   .settings(
     PlayKeys.playDefaultPort := 9851,
-    ScoverageKeys.coverageExcludedFiles := "<empty>;.*config.*;Reverse.*;.*BuildInfo.*;.*Routes.*;.*GuiceInjector;",
-    ScoverageKeys.coverageMinimumStmtTotal := 99,
-    ScoverageKeys.coverageFailOnMinimum := true,
-    ScoverageKeys.coverageHighlighting := true
-  )
-  .settings(
-    scalaVersion := "2.13.11",
-    majorVersion := 0,
     libraryDependencies ++= AppDependencies(),
-    scalacOptions += "-Wconf:src=routes/.*:s"
+    scalacOptions ++= Seq(
+      "-feature",
+      "-Wconf:src=routes/.*:s"
+    )
   )
-  // To resolve a bug with version 2.x.x of the scoverage plugin - https://github.com/sbt/sbt/issues/6997
-  // Try to remove when sbt[ 1.8.0+ and scoverage is 2.0.7+
-  .settings(libraryDependencySchemes ++= Seq("org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always))
 
 addCommandAlias("scalastyleAll", "all scalastyle Test/scalastyle")
