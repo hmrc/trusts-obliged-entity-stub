@@ -2,21 +2,10 @@
   "submissionDate" : "12/12/2020",
   "trustName" : "Hmrc Trust",
   "identifiers" : {
-    "utr" : "1000000006"
+    "utr" : "1000000017"
   },
   "trustStartDate" : "12/12/2020",
-  "correspondence" : {
-    "address" : {
-      "line1" : "1010 Easy St",
-      "line2" : "Ottawa",
-      "line3" : "Ontario",
-      "line4" : "Telford",
-      "postCode" : "TF3 4ER",
-      "country" : "UNITED KINGDOM"
-    },
-    "welsh" : true,
-    "braille" : true
-  },
+
   "entities": {
     "leadTrustee": {
       "leadTrusteeIndividual": {
