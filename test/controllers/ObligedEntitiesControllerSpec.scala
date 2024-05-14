@@ -83,6 +83,12 @@ class ObligedEntitiesControllerSpec extends SpecBase {
       (resultJson \ "code").as[String] mustBe "RESOURCE_NOT_FOUND"
     }
 
+    "obliged entities not available when missing correspondence address" in {
+      val resultJson = getObligedEntitiesAsInvalidJson("1000000017", UTR_TYPE)
+
+      (resultJson \ "code").as[String] mustBe "RESOURCE_NOT_FOUND"
+    }
+
     "return Bad Reguest for invalid id" in {
       val resultJson = getObligedEntitiesAsJson("0000000400AAAAA", UTR_TYPE, BAD_REQUEST)
 
@@ -112,6 +118,15 @@ class ObligedEntitiesControllerSpec extends SpecBase {
 
       val validationResult = obligedEntitiesValidator.validateAgainstSchema(resultJson)
       validationResult mustBe FailedValidation("Not JSON", 0, List())
+    }
+
+    "return 401 with missing correspondence address for 1000000017" in {
+      val resultJson = getObligedEntitiesAsInvalidJson("1000000017", UTR_TYPE)
+//      println("HERE HERE HERE\n\n" + resultJson)
+
+      val validationResult = obligedEntitiesValidator.validateAgainstSchema(resultJson)
+      validationResult mustBe FailedValidation("Not JSON", 0, List())
+
     }
   }
 
@@ -240,6 +255,15 @@ class ObligedEntitiesControllerSpec extends SpecBase {
 
     val validationResult = obligedEntitiesValidator.validateAgainstSchema(resultJson.toString)
     validationResult mustBe SuccessfulValidation
+
+    resultJson
+  }
+
+  private def getObligedEntitiesAsInvalidJson(id: String, idType: String): JsValue = {
+    val resultJson = getObligedEntitiesAsJson(id, idType, OK)
+
+    val invalidResult = obligedEntitiesValidator.validateAgainstSchema(resultJson.toString)
+    invalidResult mustBe FailedValidation
 
     resultJson
   }

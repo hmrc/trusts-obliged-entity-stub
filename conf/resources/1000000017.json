@@ -5,7 +5,6 @@
     "utr" : "1000000017"
   },
   "trustStartDate" : "12/12/2020",
-
   "entities": {
     "leadTrustee": {
       "leadTrusteeIndividual": {
