@@ -251,15 +251,6 @@ class ObligedEntitiesControllerSpec extends SpecBase {
     resultJson
   }
 
-//  private def getObligedEntitiesAsInvalidJson(id: String, idType: String): ValidationResult = {
-//    val resultJson = getObligedEntitiesAsJson(id, idType, OK)
-//
-//    val invalidResult = obligedEntitiesValidator.validateAgainstSchema(resultJson.toString)
-//    invalidResult mustBe a[FailedValidation]
-//
-//    invalidResult
-//  }
-
   private def testObligedEntitiesUtr(utr: String) = {
     val resultJson = getObligedEntitiesAsValidatedJson(utr, UTR_TYPE)
 
