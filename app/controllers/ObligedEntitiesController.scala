@@ -57,6 +57,9 @@ class ObligedEntitiesController @Inject()(headerValidator: HeaderValidatorAction
       // 4MLD taxable trust registered, first time played back under 5MLD. User needs to answer additional questions
       case "1000000010" =>
         jsonResult(id)
+      // 5mld taxable trust with no correspondence address
+      case "1000000017" =>
+        jsonResult(id)
       // 5mld non-taxable trusts with URN
       case "1234567890AAAAA" | "0000000001AAAAA" | "0000000002AAAAA" | "0000000003AAAAA" | "0000000004AAAAA" | "XATRUST80000001" | "NTTRUST00000001" =>
         jsonResult(id)

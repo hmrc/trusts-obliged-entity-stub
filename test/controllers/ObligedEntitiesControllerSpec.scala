@@ -16,7 +16,7 @@
 
 package controllers
 
-import models.{DesValidationError, FailedValidation, SuccessfulValidation}
+import models.{DesValidationError, FailedValidation, SuccessfulValidation, ValidationResult}
 import org.scalatest.matchers.must.Matchers._
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
@@ -112,6 +112,13 @@ class ObligedEntitiesControllerSpec extends SpecBase {
 
       val validationResult = obligedEntitiesValidator.validateAgainstSchema(resultJson)
       validationResult mustBe FailedValidation("Not JSON", 0, List())
+    }
+
+    "return failed validation with missing correspondence address for 1000000017" in {
+      val resultJson = getObligedEntitiesAsJson("1000000017", UTR_TYPE, OK)
+
+      val invalidResult = obligedEntitiesValidator.validateAgainstSchema(resultJson.toString)
+      invalidResult mustBe FailedValidation("Invalid Json", 0,  List(DesValidationError("""object has missing required properties (["correspondence"])""", "/")))
     }
   }
 
