@@ -26,7 +26,7 @@ import scala.concurrent.Future
 
 @Singleton()
 class ObligedEntitiesController @Inject()(headerValidator: HeaderValidatorAction)(cc: ControllerComponents)
-    extends BackendController(cc) with HeaderValidator {
+  extends BackendController(cc) with HeaderValidator {
 
   def getObligedEntity(id: String, idType: String): Action[AnyContent] = headerValidator.async { implicit request =>
     idType match {
@@ -52,7 +52,7 @@ class ObligedEntitiesController @Inject()(headerValidator: HeaderValidatorAction
       // 5mld taxable trusts
       case "1000000001" | "1000000002" | "1000000003" | "1000000007" | "1000000008" | "1000000101" | "1000000102" | "5174384721" | "1000000011" =>
         jsonResult(id)
-      case "1000000005" | "1000000006" | "1000000009" | "1000000011" | "1000000012" | "1000000013" | "1000000014" | "5000000000" =>
+      case "1000000005" | "1000000006" | "1000000009" | "1000000011" | "1000000012" | "1000000013" | "1000000014" | "1000000018" | "5000000000" =>
         jsonResult(id)
       // 4MLD taxable trust registered, first time played back under 5MLD. User needs to answer additional questions
       case "1000000010" =>
