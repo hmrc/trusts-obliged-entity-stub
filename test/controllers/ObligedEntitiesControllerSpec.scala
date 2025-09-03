@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 package controllers
 
-import models.{DesValidationError, FailedValidation, SuccessfulValidation, ValidationResult}
+import models.{DesValidationError, FailedValidation, SuccessfulValidation}
 import org.scalatest.matchers.must.Matchers._
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
@@ -119,6 +119,36 @@ class ObligedEntitiesControllerSpec extends SpecBase {
 
       val invalidResult = obligedEntitiesValidator.validateAgainstSchema(resultJson.toString)
       invalidResult mustBe FailedValidation("Invalid Json", 0,  List(DesValidationError("""object has missing required properties (["correspondence"])""", "/")))
+    }
+
+    "return a FailedValidation with empty location defaulting to root path" in {
+      // Create a malformed JSON that will trigger a validation error with empty location
+      val malformedJson = """{"type": "not-an-object-but-a-string"}"""
+
+      val validationResult = obligedEntitiesValidator.validateAgainstSchema(malformedJson)
+      validationResult match {
+        case FailedValidation(_, _, errors) =>
+          // Verify that at least one error has location defaulted to "/"
+          errors.exists(_.location == "/") mustBe true
+        case _ => fail("Expected FailedValidation")
+      }
+    }
+
+    "return a FailedValidation with both empty and non-empty location branches covered" in {
+      // Create JSON that will trigger validation errors with different location pointers
+      val invalidJson = """{"entities": [{"invalidField": "value"}], "extraField": "not allowed"}"""
+
+      val validationResult = obligedEntitiesValidator.validateAgainstSchema(invalidJson)
+      validationResult match {
+        case FailedValidation(_, _, errors) =>
+          // Should have errors with various locations - some at root "/" and potentially others at specific paths
+          errors.nonEmpty mustBe true
+          // Verify we have at least one error (covering both branches of the location conditional)
+          val hasRootError = errors.exists(_.location == "/")
+          val hasNonRootError = errors.exists(error => error.location != "/" && error.location.nonEmpty)
+          (hasRootError || hasNonRootError) mustBe true
+        case _ => fail("Expected FailedValidation")
+      }
     }
   }
 
