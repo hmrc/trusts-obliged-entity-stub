@@ -6,3 +6,5 @@ service-type: Backend
 test-repositories:
   - trusts-performance-tests
   - trusts-acceptance-tests
+  - trusts-iv-perf-tests
+  - trusts-iv-ui-tests
