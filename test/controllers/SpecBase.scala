@@ -37,8 +37,8 @@ import scala.concurrent.{ExecutionContext, Future}
 
 abstract class SpecBase extends AnyWordSpec with GuiceOneAppPerSuite {
 
-  protected val ENVIRONMENT_HEADER = "Environment"
-  protected val TOKEN_HEADER = "Authorization"
+  protected val ENVIRONMENT_HEADER   = "Environment"
+  protected val TOKEN_HEADER         = "Authorization"
   protected val CORRELATIONID_HEADER = "CorrelationId"
 
   protected val validHeaders: Map[String, String] = Map(
@@ -62,7 +62,7 @@ abstract class SpecBase extends AnyWordSpec with GuiceOneAppPerSuite {
   override lazy val app: Application = GuiceApplicationBuilder()
     .disable(classOf[AuditModule], classOf[DefaultBackendAuditFilter])
     .configure(
-      "metrics.enabled" -> false,
+      "metrics.enabled"                       -> false,
       "microservice.metrics.graphite.enabled" -> false
     )
     .overrides(bind[AuditConnector].to(mockAuditConnector))

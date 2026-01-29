@@ -26,15 +26,11 @@ object DesValidationError {
   implicit val formats: OFormat[DesValidationError] = Json.format[DesValidationError]
 }
 
-
-
-case class FailedValidation(message: String, code: Int, validationErrors: Seq[DesValidationError]) extends ValidationResult
-
+case class FailedValidation(message: String, code: Int, validationErrors: Seq[DesValidationError])
+    extends ValidationResult
 
 object FailedValidation {
   implicit val formats: OFormat[FailedValidation] = Json.format[FailedValidation]
 }
 
 case object SuccessfulValidation extends ValidationResult
-
-

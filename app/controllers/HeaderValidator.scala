@@ -23,13 +23,12 @@ import scala.concurrent.{ExecutionContext, Future}
 
 trait HeaderValidator {
 
-  val CORRELATIONID_HEADER = "CorrelationId"
-  val ENVIRONMENT_HEADER = "Environment"
-  val TOKEN_HEADER = "Authorization"
-  private val VALID_TOKEN_REGEX = "^(Bearer (.*))$".r
-  private val VALID_ENV_REGEX = "^(dev)$".r
+  val CORRELATIONID_HEADER              = "CorrelationId"
+  val ENVIRONMENT_HEADER                = "Environment"
+  val TOKEN_HEADER                      = "Authorization"
+  private val VALID_TOKEN_REGEX         = "^(Bearer (.*))$".r
+  private val VALID_ENV_REGEX           = "^(dev)$".r
   private val VALID_CORRELATIONID_REGEX = "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$".r
-
 
   def isEnvironmentValid(request: Request[_]): Boolean = {
     val environment = request.headers.get(ENVIRONMENT_HEADER).getOrElse("Invalid")
@@ -48,17 +47,19 @@ trait HeaderValidator {
 
 }
 
-class HeaderValidatorAction @Inject()(parser: BodyParsers.Default)
-                                     (implicit val ec: ExecutionContext) extends ActionBuilderImpl(parser) with HeaderValidator {
+class HeaderValidatorAction @Inject() (parser: BodyParsers.Default)(implicit val ec: ExecutionContext)
+    extends ActionBuilderImpl(parser) with HeaderValidator {
 
   override def invokeBlock[A](request: Request[A], block: Request[A] => Future[Result]): Future[Result] = {
-    lazy val (envValid, tokenValid, corrValid) = (isEnvironmentValid(request), isTokenValid(request), isCorrelationIdValid(request))
+    lazy val (envValid, tokenValid, corrValid) =
+      (isEnvironmentValid(request), isTokenValid(request), isCorrelationIdValid(request))
 
     (envValid, tokenValid, corrValid) match {
       case (false, _, _) => Future.successful(Results.Forbidden)
       case (_, false, _) => Future.successful(Results.Unauthorized)
       case (_, _, false) => Future.successful(Results.Forbidden)
-      case _ => block(request)
+      case _             => block(request)
     }
   }
+
 }

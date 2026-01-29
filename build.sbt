@@ -3,7 +3,7 @@ ThisBuild / majorVersion := 0
 
 lazy val microservice = Project("trusts-obliged-entity-stub", file("."))
   .enablePlugins(play.sbt.PlayScala, SbtDistributablesPlugin)
-  .disablePlugins(JUnitXmlReportPlugin) //Required to prevent https://github.com/scalatest/scalatest/issues/1427
+  .disablePlugins(JUnitXmlReportPlugin) // Required to prevent https://github.com/scalatest/scalatest/issues/1427
   .settings(CodeCoverageSettings())
   .settings(
     PlayKeys.playDefaultPort := 9851,
@@ -13,3 +13,5 @@ lazy val microservice = Project("trusts-obliged-entity-stub", file("."))
       "-Wconf:src=routes/.*:s"
     )
   )
+
+addCommandAlias("scalafmtAll", "all scalafmtSbt scalafmt Test/scalafmt")

@@ -27,7 +27,7 @@ import scala.concurrent.Future
 
 class ObligedEntitiesControllerSpec extends SpecBase {
 
-  private val obligedEntitiesSchema = "/resources/schemas/API1584_schema_1.2.0.json"
+  private val obligedEntitiesSchema    = "/resources/schemas/API1584_schema_1.2.0.json"
   private val obligedEntitiesValidator = new ValidationService().get(obligedEntitiesSchema)
 
   private val SUT = app.injector.instanceOf[ObligedEntitiesController]
@@ -86,7 +86,7 @@ class ObligedEntitiesControllerSpec extends SpecBase {
     "return Bad Reguest for invalid id" in {
       val resultJson = getObligedEntitiesAsJson("0000000400AAAAA", UTR_TYPE, BAD_REQUEST)
 
-      (resultJson \ "code").as[String] mustBe "INVALID_ID"
+      (resultJson \ "code").as[String]   mustBe "INVALID_ID"
       (resultJson \ "reason").as[String] mustBe "Submission has not passed validation. Invalid parameter idValue."
     }
 
@@ -102,7 +102,10 @@ class ObligedEntitiesControllerSpec extends SpecBase {
         "Invalid Json",
         0,
         List(
-          DesValidationError("""instance type (string) does not match any allowed primitive type (allowed: ["object"])""", "/")
+          DesValidationError(
+            """instance type (string) does not match any allowed primitive type (allowed: ["object"])""",
+            "/"
+          )
         )
       )
     }
@@ -118,7 +121,11 @@ class ObligedEntitiesControllerSpec extends SpecBase {
       val resultJson = getObligedEntitiesAsJson("1000000017", UTR_TYPE, OK)
 
       val invalidResult = obligedEntitiesValidator.validateAgainstSchema(resultJson.toString)
-      invalidResult mustBe FailedValidation("Invalid Json", 0,  List(DesValidationError("""object has missing required properties (["correspondence"])""", "/")))
+      invalidResult mustBe FailedValidation(
+        "Invalid Json",
+        0,
+        List(DesValidationError("""object has missing required properties (["correspondence"])""", "/"))
+      )
     }
 
     "return a FailedValidation with empty location defaulting to root path" in {
@@ -130,7 +137,7 @@ class ObligedEntitiesControllerSpec extends SpecBase {
         case FailedValidation(_, _, errors) =>
           // Verify that at least one error has location defaulted to "/"
           errors.exists(_.location == "/") mustBe true
-        case _ => fail("Expected FailedValidation")
+        case _                              => fail("Expected FailedValidation")
       }
     }
 
@@ -144,42 +151,35 @@ class ObligedEntitiesControllerSpec extends SpecBase {
           // Should have errors with various locations - some at root "/" and potentially others at specific paths
           errors.nonEmpty mustBe true
           // Verify we have at least one error (covering both branches of the location conditional)
-          val hasRootError = errors.exists(_.location == "/")
+          val hasRootError    = errors.exists(_.location == "/")
           val hasNonRootError = errors.exists(error => error.location != "/" && error.location.nonEmpty)
           (hasRootError || hasNonRootError) mustBe true
-        case _ => fail("Expected FailedValidation")
+        case _                              => fail("Expected FailedValidation")
       }
     }
   }
 
   "getObligedEntity By Urn" should {
-    "return OK with valid processed payload for 0000000001AAAAA" in {
+    "return OK with valid processed payload for 0000000001AAAAA" in
       testObligedEntitiesUrn("0000000001AAAAA")
-    }
 
-    "return OK with valid processed payload for 0000000002AAAAA" in {
+    "return OK with valid processed payload for 0000000002AAAAA" in
       testObligedEntitiesUrn("0000000002AAAAA")
-    }
 
-    "return OK with valid processed payload for 0000000003AAAAA" in {
+    "return OK with valid processed payload for 0000000003AAAAA" in
       testObligedEntitiesUrn("0000000003AAAAA")
-    }
 
-    "return OK with valid processed payload for 0000000004AAAAA" in {
+    "return OK with valid processed payload for 0000000004AAAAA" in
       testObligedEntitiesUrn("0000000004AAAAA")
-    }
 
-    "return OK with valid processed payload for 1234567890AAAAA" in {
+    "return OK with valid processed payload for 1234567890AAAAA" in
       testObligedEntitiesUrn("1234567890AAAAA")
-    }
 
-    "return OK with valid processed payload for XATRUST80000001" in {
+    "return OK with valid processed payload for XATRUST80000001" in
       testObligedEntitiesUrn("XATRUST80000001")
-    }
 
-    "return OK with valid processed payload for NTTRUST00000001" in {
+    "return OK with valid processed payload for NTTRUST00000001" in
       testObligedEntitiesUrn("NTTRUST00000001")
-    }
 
     "obliged entities not available for provided urn" in {
       val resultJson = getObligedEntitiesAsJson("0000000404AAAAA", URN_TYPE, NOT_FOUND)
@@ -190,7 +190,7 @@ class ObligedEntitiesControllerSpec extends SpecBase {
     "return Bad Reguest for invalid id" in {
       val resultJson = getObligedEntitiesAsJson("1000000001", URN_TYPE, BAD_REQUEST)
 
-      (resultJson \ "code").as[String] mustBe "INVALID_ID"
+      (resultJson \ "code").as[String]   mustBe "INVALID_ID"
       (resultJson \ "reason").as[String] mustBe "Submission has not passed validation. Invalid parameter idValue."
     }
 
@@ -200,29 +200,29 @@ class ObligedEntitiesControllerSpec extends SpecBase {
     "return Bad Reguest for invalid type" in {
       val resultJson = getObligedEntitiesAsJson("0000000400AAAAA", "XXXX", BAD_REQUEST)
 
-      (resultJson \ "code").as[String] mustBe "INVALID_IDTYPE"
+      (resultJson \ "code").as[String]   mustBe "INVALID_IDTYPE"
       (resultJson \ "reason").as[String] mustBe "Submission has not passed validation. Invalid parameter idType."
     }
 
     "return Unprocessable Entity Error when des having internal errors" in {
       val resultJson = getObligedEntitiesAsJson("0000000422", UTR_TYPE, UNPROCESSABLE_ENTITY)
 
-      (resultJson \ "code").as[String] mustBe "BUSINESS_VALIDATION"
+      (resultJson \ "code").as[String]   mustBe "BUSINESS_VALIDATION"
       (resultJson \ "reason").as[String] mustBe "The remote end point has indicated the request could not be processed."
     }
-
 
     "return Internal Server Error when des having internal errors" in {
       val resultJson = getObligedEntitiesAsJson("0000000500", UTR_TYPE, INTERNAL_SERVER_ERROR)
 
       (resultJson \ "code").as[String] mustBe "SERVER_ERROR"
-      (resultJson \ "reason").as[String] mustBe "IF is currently experiencing problems that require live service intervention."
+      (resultJson \ "reason")
+        .as[String]                    mustBe "IF is currently experiencing problems that require live service intervention."
     }
 
     "return 503 service unavailable when dependent service is unavailable" in {
       val resultJson = getObligedEntitiesAsJson("0000000503", UTR_TYPE, SERVICE_UNAVAILABLE)
 
-      (resultJson \ "code").as[String] mustBe "SERVICE_UNAVAILABLE"
+      (resultJson \ "code").as[String]   mustBe "SERVICE_UNAVAILABLE"
       (resultJson \ "reason").as[String] mustBe "Dependent systems are currently not responding."
     }
 
@@ -266,8 +266,8 @@ class ObligedEntitiesControllerSpec extends SpecBase {
 
   private def getObligedEntitiesAsJson(id: String, idType: String, expectedResult: Int): JsValue = {
     val request = createGetRequestWithHeaders(s"/trusts/obliged-entities/$idType/$id", validHeaders)
-    val result = SUT.getObligedEntity(id, idType).apply(request)
-    status(result) must be(expectedResult)
+    val result  = SUT.getObligedEntity(id, idType).apply(request)
+    status(result)            must be(expectedResult)
     contentType(result).get mustBe "application/json"
     contentAsJson(result)
   }
@@ -293,17 +293,26 @@ class ObligedEntitiesControllerSpec extends SpecBase {
     (resultJson \ "identifiers" \ "urn").as[String] mustBe urn
   }
 
-  private def getObligedEntitiesAsResponse(id: String, idType: String, overrideHeader: (String, String)): Future[Result] = {
+  private def getObligedEntitiesAsResponse(
+    id: String,
+    idType: String,
+    overrideHeader: (String, String)
+  ): Future[Result] = {
     val newHeaders = validHeaders + overrideHeader
-    val request = createGetRequestWithHeaders(s"/trusts/obliged-entities/$idType/$id", newHeaders)
-    val result = SUT.getObligedEntity(id, idType).apply(request)
+    val request    = createGetRequestWithHeaders(s"/trusts/obliged-entities/$idType/$id", newHeaders)
+    val result     = SUT.getObligedEntity(id, idType).apply(request)
     result
   }
 
-  private def getObligedEntitiesAsResponseWithoutHeader(id: String, idType: String, headerToDelete: String): Future[Result] = {
+  private def getObligedEntitiesAsResponseWithoutHeader(
+    id: String,
+    idType: String,
+    headerToDelete: String
+  ): Future[Result] = {
     val newHeaders = validHeaders - headerToDelete
-    val request = createGetRequestWithHeaders(s"/trusts/obliged-entities/$idType/$id", newHeaders)
-    val result = SUT.getObligedEntity(id, idType).apply(request)
+    val request    = createGetRequestWithHeaders(s"/trusts/obliged-entities/$idType/$id", newHeaders)
+    val result     = SUT.getObligedEntity(id, idType).apply(request)
     result
   }
+
 }
