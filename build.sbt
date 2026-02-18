@@ -1,5 +1,5 @@
-ThisBuild / scalaVersion := "2.13.16"
-ThisBuild / majorVersion := 0
+ThisBuild / scalaVersion := "3.3.7"
+ThisBuild / majorVersion := 1
 
 lazy val microservice = Project("trusts-obliged-entity-stub", file("."))
   .enablePlugins(play.sbt.PlayScala, SbtDistributablesPlugin)

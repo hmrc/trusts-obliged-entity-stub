@@ -47,7 +47,7 @@ trait HeaderValidator {
 
 }
 
-class HeaderValidatorAction @Inject() (parser: BodyParsers.Default)(implicit val ec: ExecutionContext)
+class HeaderValidatorAction @Inject() (parser: BodyParsers.Default)(using ec: ExecutionContext)
     extends ActionBuilderImpl(parser) with HeaderValidator {
 
   override def invokeBlock[A](request: Request[A], block: Request[A] => Future[Result]): Future[Result] = {

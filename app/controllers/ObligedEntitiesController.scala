@@ -28,7 +28,9 @@ import scala.concurrent.Future
 class ObligedEntitiesController @Inject() (headerValidator: HeaderValidatorAction)(cc: ControllerComponents)
     extends BackendController(cc) with HeaderValidator {
 
-  def getObligedEntity(id: String, idType: String): Action[AnyContent] = headerValidator.async { implicit request =>
+  def getObligedEntity(id: String, idType: String): Action[AnyContent] = headerValidator.async { request =>
+    given Request[AnyContent] = request
+
     idType match {
       case "UTR" if isUtrValid(id) => retrieveJson(id)
       case "URN" if isUrnValid(id) => retrieveJson(id)
@@ -37,7 +39,7 @@ class ObligedEntitiesController @Inject() (headerValidator: HeaderValidatorActio
     }
   }
 
-  private def retrieveJson(id: String)(implicit request: Request[AnyContent]): Future[Result] = {
+  private def retrieveJson(id: String)(using request: Request[AnyContent]): Future[Result] = {
     def jsonResult(filename: String) = {
       val path = s"/resources/$filename.json"
       Future.successful(
@@ -88,8 +90,8 @@ class ObligedEntitiesController @Inject() (headerValidator: HeaderValidatorActio
     }
   }
 
-  private val utrRegex                 = "^[0-9]{10}$".r
-  private val urnRegex                 = "^[0-9A-Z]{15}$".r
-  def isUtrValid(utr: String): Boolean = utrRegex.findFirstIn(utr).isDefined
-  def isUrnValid(urn: String): Boolean = urnRegex.findFirstIn(urn).isDefined
+  private val utrRegex                         = "^[0-9]{10}$".r
+  private val urnRegex                         = "^[0-9A-Z]{15}$".r
+  private def isUtrValid(utr: String): Boolean = utrRegex.findFirstIn(utr).isDefined
+  private def isUrnValid(urn: String): Boolean = urnRegex.findFirstIn(urn).isDefined
 }
