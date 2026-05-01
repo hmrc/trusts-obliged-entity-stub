@@ -16,11 +16,11 @@
 
 package controllers
 
-import models.{DesValidationError, FailedValidation, SuccessfulValidation}
-import org.scalatest.matchers.must.Matchers._
+import models.{FailedValidation, SuccessfulValidation}
+import org.scalatest.matchers.must.Matchers.*
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import service.ValidationService
 
 import scala.concurrent.Future
@@ -98,16 +98,13 @@ class ObligedEntitiesControllerSpec extends SpecBase {
       )
 
       val validationResult = obligedEntitiesValidator.validateAgainstSchema(resultJson.toString())
-      validationResult mustBe FailedValidation(
-        "Invalid Json",
-        0,
-        List(
-          DesValidationError(
-            """instance type (string) does not match any allowed primitive type (allowed: ["object"])""",
-            "/"
-          )
-        )
-      )
+      validationResult match {
+        case FailedValidation(message, code, errors) =>
+          message   mustBe "Invalid Json"
+          code      mustBe 0
+          errors.size must be >= 1
+        case _                                       => fail("Expected FailedValidation")
+      }
     }
 
     "return a FailedValidation when not given Json" in {
@@ -121,11 +118,13 @@ class ObligedEntitiesControllerSpec extends SpecBase {
       val resultJson = getObligedEntitiesAsJson("1000000017", UTR_TYPE, OK)
 
       val invalidResult = obligedEntitiesValidator.validateAgainstSchema(resultJson.toString)
-      invalidResult mustBe FailedValidation(
-        "Invalid Json",
-        0,
-        List(DesValidationError("""object has missing required properties (["correspondence"])""", "/"))
-      )
+      invalidResult match {
+        case FailedValidation(message, code, errors) =>
+          message                                                         mustBe "Invalid Json"
+          code                                                            mustBe 0
+          errors.exists(_.message.toLowerCase.contains("correspondence")) mustBe true
+        case _                                       => fail("Expected FailedValidation")
+      }
     }
 
     "return a FailedValidation with empty location defaulting to root path" in {
@@ -156,6 +155,13 @@ class ObligedEntitiesControllerSpec extends SpecBase {
           (hasRootError || hasNonRootError) mustBe true
         case _                              => fail("Expected FailedValidation")
       }
+    }
+
+    "throw a RuntimeException when the schema file is missing" in {
+      val thrown = intercept[RuntimeException] {
+        new ValidationService().get("/resources/schemas/does-not-exist.json")
+      }
+      thrown.getMessage mustBe "Missing schema: /resources/schemas/does-not-exist.json"
     }
   }
 

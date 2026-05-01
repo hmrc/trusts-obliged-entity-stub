@@ -16,7 +16,7 @@
 
 package controllers
 
-import play.api.mvc._
+import play.api.mvc.*
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -30,17 +30,17 @@ trait HeaderValidator {
   private val VALID_ENV_REGEX           = "^(dev)$".r
   private val VALID_CORRELATIONID_REGEX = "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$".r
 
-  def isEnvironmentValid(request: Request[_]): Boolean = {
+  def isEnvironmentValid(request: Request[?]): Boolean = {
     val environment = request.headers.get(ENVIRONMENT_HEADER).getOrElse("Invalid")
     VALID_ENV_REGEX.findFirstIn(environment).isDefined
   }
 
-  def isTokenValid(request: Request[_]): Boolean = {
+  def isTokenValid(request: Request[?]): Boolean = {
     val tokenValue = request.headers.get(TOKEN_HEADER).getOrElse("Invalid")
     VALID_TOKEN_REGEX.findFirstIn(tokenValue).isDefined
   }
 
-  def isCorrelationIdValid(request: Request[_]): Boolean = {
+  def isCorrelationIdValid(request: Request[?]): Boolean = {
     val correlationId = request.headers.get(CORRELATIONID_HEADER).getOrElse("Invalid")
     VALID_CORRELATIONID_REGEX.findFirstIn(correlationId).isDefined
   }

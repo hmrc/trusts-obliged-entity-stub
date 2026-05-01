@@ -48,11 +48,11 @@ abstract class SpecBase extends AnyWordSpec with GuiceOneAppPerSuite {
   )
 
   def createGetRequestWithValidHeaders(url: String): FakeRequest[AnyContentAsEmpty.type] =
-    FakeRequest("GET", url).withHeaders(validHeaders.toSeq: _*)
+    FakeRequest("GET", url).withHeaders(validHeaders.toSeq*)
 
   def createGetRequestWithHeaders(url: String, headers: Map[String, String]): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest("GET", url)
-      .withHeaders(headers.toSeq: _*)
+      .withHeaders(headers.toSeq*)
 
   val mockAuditConnector: AuditConnector = Mockito.mock(classOf[AuditConnector])
 

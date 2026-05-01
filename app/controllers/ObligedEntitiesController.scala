@@ -20,7 +20,7 @@ import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent, ControllerComponents, Request, Result}
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 import utils.JsonUtils.jsonFromFile
-import utils.DesResponse._
+import utils.DesResponse.*
 
 import scala.concurrent.Future
 
@@ -44,7 +44,7 @@ class ObligedEntitiesController @Inject() (headerValidator: HeaderValidatorActio
       val path = s"/resources/$filename.json"
       Future.successful(
         Ok(jsonFromFile(path)).withHeaders(
-          request.headers.get(CORRELATIONID_HEADER).map((CORRELATIONID_HEADER, _)).toSeq: _*
+          request.headers.get(CORRELATIONID_HEADER).map((CORRELATIONID_HEADER, _)).toSeq*
         )
       )
     }
