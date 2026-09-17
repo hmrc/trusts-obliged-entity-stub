@@ -24,10 +24,14 @@ object HipResponse {
 
   val jsonResponse400: JsValue = Json.parse(s"""
        |{
-       |  "error": {
-       |    "code": "400",
-       |    "message": "Bad Request",
-       |    "logID": "00000000000000000000000000000000"
+       |  "origin": "HIP",
+       |  "response": {
+       |    "failures": [
+       |      {
+       |        "type": "Type of Failure",
+       |        "reason": "Reason for Failure"
+       |      }
+       |    ]
        |  }
        |}""".stripMargin)
 
@@ -60,11 +64,30 @@ object HipResponse {
 
   val jsonResponse500: JsValue = Json.parse(s"""
        |{
-       |  "error": {
-       |    "code": "500",
-       |    "message": "Internal Server Error",
-       |    "logID": "00000000000000000000000000000000"
+       |  "origin": "HoD",
+       |  "response": {
+       |    "error": {
+       |      "code": "500",
+       |      "logID": "00000000000000000000000000000000",
+       |      "message": "String"
+       |    }
        |  }
        |}""".stripMargin)
+
+  val jsonResponse503: JsValue = Json.parse(
+    """
+      |{
+      |  "origin": "HIP",
+      |  "response": {
+      |    "failures": [
+      |      {
+      |        "type": "string",
+      |        "reason": "string"
+      |      }
+      |    ]
+      |  }
+      |}
+      |""".stripMargin
+  )
 
 }
