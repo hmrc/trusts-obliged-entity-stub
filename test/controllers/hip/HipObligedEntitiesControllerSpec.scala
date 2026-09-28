@@ -19,7 +19,8 @@ package controllers.hip
 import controllers.SpecBase
 import models.SuccessfulValidation
 import org.scalatest.matchers.must.Matchers.*
-import play.api.libs.json.{JsValue, Json}
+import org.scalatest.matchers.should.Matchers
+import play.api.libs.json.JsValue
 import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
@@ -28,7 +29,7 @@ import utils.HipResponse.*
 
 import scala.concurrent.Future
 
-class HipObligedEntitiesControllerSpec extends SpecBase {
+class HipObligedEntitiesControllerSpec extends SpecBase with Matchers {
 
   private val obligedEntitiesSchema =
     "/resources/schemas/hip/ObligedEntitiesSuccessResponse_EPID1755_TRS_openapi_v0.1.7.json"
@@ -168,10 +169,20 @@ class HipObligedEntitiesControllerSpec extends SpecBase {
       }
     }
 
+    "return 503 with the expected payload" in {
+      getObligedEntitiesAsJson("0000000503", UTR_TYPE, SERVICE_UNAVAILABLE) mustBe jsonResponse503
+    }
+
     "return Internal Server Error when HIP has internal errors" in {
       val resultJson = getObligedEntitiesAsJson("0000000500", UTR_TYPE, INTERNAL_SERVER_ERROR)
 
       resultJson mustBe jsonResponse500
+    }
+
+    "return 400" in {
+      val resultJson = getObligedEntitiesAsJson("0000000400", UTR_TYPE, BAD_REQUEST)
+
+      resultJson mustBe jsonResponse400
     }
   }
 

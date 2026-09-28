@@ -87,6 +87,8 @@ class HipObligedEntitiesController @Inject() (headerValidator: HipHeaderValidato
         Future.successful(UnprocessableEntity(json422ResponseRequestNotProcessed))
       case "0000422999" =>
         Future.successful(UnprocessableEntity(json422ResponseTechnicalError))
+      case "0000000503" =>
+        Future.successful(ServiceUnavailable(jsonResponse503))
       case _            =>
         Future.successful(InternalServerError(jsonResponse500))
     }
