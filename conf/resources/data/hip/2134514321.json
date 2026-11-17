@@ -28,9 +28,9 @@
     "trustees": [
       {
         "trusteeIndividual": {
-          "firstName": "A",
-          "middleName": "A",
-          "lastName": "A",
+          "firstName": "a",
+          "middleName": "a",
+          "lastName": "a",
           "dateOfBirth": "08/1957",
           "nationality": "NEW CALEDONIA",
           "countryOfResidence": "SWITZERLAND"
@@ -45,9 +45,9 @@
     ],
     "naturalPerson": [
       {
-        "firstName": "A",
-        "middleName": "A",
-        "lastName": "A",
+        "firstName": "a",
+        "middleName": "a",
+        "lastName": "a",
         "dateOfBirth": "08/1957",
         "nationality": "TURKEY",
         "countryOfResidence": "UTD.ARAB EMIR."
@@ -56,9 +56,9 @@
     "settlors": {
       "settlorIndividual": [
         {
-          "firstName": "A",
-          "middleName": "A",
-          "lastName": "A",
+          "firstName": "a",
+          "middleName": "a",
+          "lastName": "a",
           "dateOfBirth": "08/1957",
           "nationality": "HEARD/MCDON.ISL",
           "countryOfResidence": "UTD.ARAB EMIR."
@@ -71,9 +71,9 @@
         }
       ],
       "deceased": {
-        "firstName": "A",
-        "middleName": "A",
-        "lastName": "A",
+        "firstName": "a",
+        "middleName": "a",
+        "lastName": "a",
         "dateOfBirth": "08/1957",
         "nationality": "MALDIVES",
         "countryOfResidence": "MAURETANIA"
@@ -82,9 +82,9 @@
     "protectors": {
       "protectorIndividual": [
         {
-          "firstName": "A",
-          "middleName": "A",
-          "lastName": "A",
+          "firstName": "a",
+          "middleName": "a",
+          "lastName": "a",
           "dateOfBirth": "08/1957",
           "nationality": "FINLAND",
           "countryOfResidence": "LEBANON"
@@ -100,9 +100,9 @@
     "beneficiary": {
       "individual": [
         {
-          "firstName": "A",
-          "middleName": "A",
-          "lastName": "A",
+          "firstName": "a",
+          "middleName": "a",
+          "lastName": "a",
           "dateOfBirth": "08/1957",
           "nationality": "VIETNAM",
           "countryOfResidence": "ST KITTS&NEVIS"
