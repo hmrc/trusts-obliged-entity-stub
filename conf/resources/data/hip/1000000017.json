@@ -8,9 +8,9 @@
   "entities": {
     "leadTrustee": {
       "leadTrusteeIndividual": {
-        "firstName": "Peter",
-        "middleName": "Thomas",
-        "lastName": "Paul",
+        "firstName": "PETER",
+        "middleName": "THOMAS",
+        "lastName": "PAUL",
         "dateOfBirth": "12/1500",
         "countryOfResidence": "CURAÇAO"
       }
@@ -18,17 +18,17 @@
     "beneficiary": {
       "individual": [
         {
-          "firstName": "Peter",
-          "middleName": "Thomas",
-          "lastName": "Paul",
+          "firstName": "PETER",
+          "middleName": "THOMAS",
+          "lastName": "PAUL",
           "dateOfBirth": "12/1999",
           "nationality": "UNITED KINGDOM",
           "countryOfResidence": "IRELAND"
         },
         {
-          "firstName": "Tom",
-          "middleName": "Thomas",
-          "lastName": "Paul",
+          "firstName": "TOM",
+          "middleName": "THOMAS",
+          "lastName": "PAUL",
           "dateOfBirth": "12/1897",
           "nationality": "IRELAND",
           "countryOfResidence": "UNITED KINGDOM"
