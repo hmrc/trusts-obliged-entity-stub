@@ -19,12 +19,12 @@
     "beneficiary": {
       "individual": [
         {
-          "firstName": "1234567890 QWERTYUIOP ,.(/)&'- NAME",
-          "lastName": "1234567890 QWERTYUIOP ,.(/)&'- NAME"
+          "firstName": "1234567890 qWERTYUIOP ,.(/)&'- NAME",
+          "lastName": "1234567890 QWErTYUIOP ,.(/)&'- NAME"
         },
         {
-          "firstName": "DANIEL",
-          "lastName": "SMITH"
+          "firstName": "Daniel",
+          "lastName": "Smith"
         }
       ],
       "company": [
@@ -63,14 +63,14 @@
     },
     "settlors": {
       "deceased": {
-        "firstName": "JOHN",
-        "lastName": "O'CONNOR"
+        "firstName": "John",
+        "lastName": "O'Connor"
       }
     },
     "leadTrustee": {
       "leadTrusteeIndividual": {
-        "firstName": "1234567890 QWERTYUIOP ,.(/)&'- NAME",
-        "lastName": "1234567890 QWERTYUIOP ,.(/)&'- NAME",
+        "firstName": "1234567890 QWERTYuIOP ,.(/)&'- NAME",
+        "lastName": "1234567890 QWeRTYUIOP ,.(/)&'- NAME",
         "dateOfBirth": "03/2015",
         "nationality": "DE",
         "countryOfResidence": "DE"
@@ -79,8 +79,8 @@
     "trustees": [
       {
         "trusteeIndividual": {
-          "firstName": "1234567890 QWERTYUIOP ,.(/)&'- NAME",
-          "lastName": "1234567890 QWERTYUIOP ,.(/)&'- NAME"
+          "firstName": "1234567890 QWErTYUIOP ,.(/)&'- NAME",
+          "lastName": "1234567890 QWERTYUIOp ,.(/)&'- NAME"
         }
       }
     ]
